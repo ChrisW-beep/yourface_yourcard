@@ -692,7 +692,7 @@ function loadAIScene(sport, scene){
 
   const sceneIds=['tScene','bScene','pScene'];
 
-  puter.ai.txt2img(bgPrompt,{model:'black-forest-labs/FLUX.1-schnell-Free'})
+  puter.ai.txt2img(bgPrompt,{model:'black-forest-labs/FLUX.1-schnell'})
     .then(imgEl=>{
       console.log('AI scene generated via Puter.js FLUX');
       const src=imgEl.src;
