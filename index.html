@@ -119,6 +119,25 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .custom-stats-area{margin-top:8px;padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--bdr);border-radius:4px;}
 .custom-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .stats-hint{display:block;margin-top:6px;font-size:0.65rem;color:var(--muted);opacity:0.6;}
+.print-btn svg{width:16px;height:16px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;max-width:720px;width:100%;padding:32px;position:relative;max-height:90vh;overflow-y:auto;}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.6rem;cursor:pointer;transition:color 0.2s;}.modal-close:hover{color:var(--txt);}
+.modal-title{font-family:'Oswald',sans-serif;font-size:1.4rem;color:var(--txt);margin:0 0 8px;}
+.modal-desc{color:var(--muted);font-size:0.85rem;margin:0 0 20px;}
+.print-options{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.print-opt{background:rgba(255,255,255,0.03);border:1px solid var(--bdr);border-radius:8px;padding:18px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.print-opt.featured{border-color:var(--gold);background:rgba(255,215,0,0.04);}
+.print-opt-icon{font-size:1.8rem;}
+.print-opt h3{font-family:'Oswald',sans-serif;font-size:0.85rem;letter-spacing:1.5px;color:var(--txt);margin:0;}
+.print-opt p{font-size:0.72rem;color:var(--muted);margin:0;line-height:1.4;flex:1;}
+.btn-print-action{background:rgba(255,255,255,0.08);border:1px solid var(--bdr);border-radius:4px;color:var(--txt);padding:8px 14px;font-family:'Oswald',sans-serif;font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;width:100%;}
+.btn-print-action:hover:not(:disabled){background:var(--gold);color:#000;border-color:var(--gold);}
+.btn-print-action.pro{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;font-weight:600;}
+.btn-print-action:disabled{opacity:0.4;cursor:not-allowed;}
+.print-price{font-family:'Oswald',sans-serif;font-size:0.75rem;color:var(--gold);letter-spacing:1px;}
+.print-tip{font-size:0.72rem;color:var(--muted);background:rgba(255,255,255,0.03);border-radius:6px;padding:12px;margin:0;line-height:1.5;}
+@media(max-width:600px){.print-options{grid-template-columns:1fr;}}
 
 .gw{padding:0 13px 13px;}
 .btn-gen{width:100%;background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);color:#000;border:none;border-radius:3px;padding:13px;font-family:'Oswald',sans-serif;font-size:0.92rem;font-weight:600;letter-spacing:4px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
@@ -157,9 +176,9 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .card{width:var(--cw);height:var(--ch);position:relative;overflow:hidden;border-radius:14px;cursor:pointer;transform:perspective(1000px) rotateY(-5deg) rotateX(3deg);transition:transform 0.55s cubic-bezier(0.23,1,0.32,1),box-shadow 0.55s ease;flex-shrink:0;user-select:none;}
 .card:hover{transform:perspective(1000px) rotateY(0) rotateX(0) scale(1.05);}
 
-/* ── TOPPS CHROME ── */
-.topps{box-shadow:0 28px 80px rgba(0,0,0,0.75),0 0 0 1px rgba(255,255,255,0.1);}
-.topps:hover{box-shadow:0 40px 100px rgba(0,0,0,0.85),0 0 0 2px rgba(255,255,255,0.22),0 0 40px rgba(255,255,255,0.04);}
+/* ── FOPPS CHROME ── */
+.fopps{box-shadow:0 28px 80px rgba(0,0,0,0.75),0 0 0 1px rgba(255,255,255,0.1);}
+.fopps:hover{box-shadow:0 40px 100px rgba(0,0,0,0.85),0 0 0 2px rgba(255,255,255,0.22),0 0 40px rgba(255,255,255,0.04);}
 .t-stock{position:absolute;inset:0;background:#f2ede2;}
 .t-foil{position:absolute;inset:0;z-index:30;pointer-events:none;
   background:linear-gradient(108deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.6) 16%,rgba(200,220,255,0.18) 26%,rgba(255,255,255,0) 36%,rgba(255,210,80,0.12) 50%,rgba(255,255,255,0) 64%,rgba(210,255,210,0.1) 74%,rgba(255,255,255,0.38) 85%,rgba(255,255,255,0) 100%);
@@ -192,9 +211,9 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .t-lgbox{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(0,0,0,0.1);}
 .t-lgbox span{font-family:'Oswald',sans-serif;font-size:0.48rem;font-weight:700;}
 
-/* ── BOWMAN ── */
-.bowman{box-shadow:0 28px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(0,200,150,0.15);}
-.bowman:hover{box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 0 2px rgba(0,210,155,0.45),0 0 50px rgba(0,170,120,0.15);}
+/* ── FOWMAN ── */
+.fowman{box-shadow:0 28px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(0,200,150,0.15);}
+.fowman:hover{box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 0 2px rgba(0,210,155,0.45),0 0 50px rgba(0,170,120,0.15);}
 .b-bg{position:absolute;inset:0;background:linear-gradient(165deg,#0d1824 0%,#060e18 45%,#060b10 100%);}
 .b-tex{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(-48deg,transparent,transparent 3px,rgba(0,200,150,0.018) 3px,rgba(0,200,150,0.018) 4px);}
 .b-foil{position:absolute;inset:0;z-index:30;pointer-events:none;background:linear-gradient(112deg,transparent 0%,rgba(0,255,180,0.07) 22%,transparent 42%,rgba(80,210,255,0.05) 56%,transparent 72%,rgba(0,200,150,0.06) 86%,transparent 100%);mix-blend-mode:screen;}
@@ -219,9 +238,9 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .b-cn{font-family:'Barlow Condensed',sans-serif;font-size:0.48rem;color:rgba(255,255,255,0.18);letter-spacing:1px;}
 .b-lg{font-family:'Oswald',sans-serif;font-size:0.48rem;letter-spacing:1px;color:rgba(0,210,155,0.45);}
 
-/* ── PANINI PRIZM ── */
-.panini{box-shadow:0 28px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(140,70,255,0.22);}
-.panini:hover{box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 0 2px rgba(170,90,255,0.55),0 0 65px rgba(130,55,255,0.22);}
+/* ── FRIZIM ── */
+.frizim{box-shadow:0 28px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(140,70,255,0.22);}
+.frizim:hover{box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 0 2px rgba(170,90,255,0.55),0 0 65px rgba(130,55,255,0.22);}
 .p-bg{position:absolute;inset:0;background:linear-gradient(168deg,#080410 0%,#0a0618 30%,#060310 60%,#040208 100%);}
 .p-prism{position:absolute;inset:0;z-index:30;pointer-events:none;background:conic-gradient(from 195deg at 55% 32%,rgba(255,50,150,0.065),rgba(255,130,30,0.055),rgba(255,240,30,0.055),rgba(30,240,120,0.055),rgba(30,155,255,0.065),rgba(155,30,255,0.065),rgba(255,30,200,0.055),rgba(255,50,150,0.045));mix-blend-mode:screen;}
 .p-lines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(-33deg,transparent,transparent 4px,rgba(140,70,255,0.022) 4px,rgba(140,70,255,0.022) 5px);}
@@ -291,9 +310,9 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
   </div>
 
   <div class="style-row">
-    <button class="stab on" data-style="topps"><span class="stab-brand">TOPPS</span><span class="stab-sub">Chrome Series</span></button>
-    <button class="stab" data-style="bowman"><span class="stab-brand">BOWMAN</span><span class="stab-sub">Draft Chrome</span></button>
-    <button class="stab" data-style="panini"><span class="stab-brand">PANINI</span><span class="stab-sub">Prizm</span></button>
+    <button class="stab on" data-style="fopps"><span class="stab-brand">FOPPS</span><span class="stab-sub">Chrome Series</span></button>
+    <button class="stab" data-style="fowman"><span class="stab-brand">FOWMAN</span><span class="stab-sub">Draft Chrome</span></button>
+    <button class="stab" data-style="frizim"><span class="stab-brand">FRIZIM</span><span class="stab-sub">Prizm</span></button>
   </div>
 </section>
 
@@ -354,7 +373,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
               <option value="ROOKIE CARD">🌟 Rookie Card</option>
               <option value="ALL-STAR">⭐ All-Star Edition</option>
               <option value="DRAFT PICK">🎯 Draft Pick</option>
-              <option value="PRIZM">💎 Prizm</option>
+              <option value="FRIZIM">💎 Frizim</option>
               <option value="CHROME REFRACTOR">🔮 Chrome Refractor</option>
               <option value="AUTO RC">✍️ Autograph RC</option>
               <option value="1ST EDITION">🥇 1st Edition</option>
@@ -405,12 +424,12 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
 
     <div class="result" id="stResult">
 
-      <!-- TOPPS -->
-      <div class="card topps" id="cTopps" style="display:none">
+      <!-- FOPPS -->
+      <div class="card fopps" id="cFopps" style="display:none">
         <div class="t-stock"></div><div class="t-refract"></div><div class="t-foil"></div>
         <div class="t-topbar" id="tTopbar"></div>
         <div class="t-photo"><img class="card-scene" id="tScene" src="" alt=""><img class="card-selfie" id="tSelfie" src="" alt=""><div class="t-pfade"></div></div>
-        <div class="t-yr-badge"><span class="t-yr">2026</span><span class="t-set">TOPPS CHROME</span></div>
+        <div class="t-yr-badge"><span class="t-yr">2026</span><span class="t-set">FOPPS CHROME</span></div>
         <div class="t-flag" id="tEd">ROOKIE CARD</div>
         <div class="t-body">
           <div class="t-cbar" id="tCbar"></div>
@@ -422,11 +441,11 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
         <div class="gen-ovl hide" id="tOvl"><div class="gen-ovl-lbl">GENERATING SCENE…</div><div class="gen-bar-wrap"><div class="gen-bar" id="tGbar"></div></div></div>
       </div>
 
-      <!-- BOWMAN -->
-      <div class="card bowman" id="cBowman" style="display:none">
+      <!-- FOWMAN -->
+      <div class="card fowman" id="cFowman" style="display:none">
         <div class="b-bg"></div><div class="b-tex"></div><div class="b-foil"></div>
         <div class="b-photo"><img class="card-scene" id="bScene" src="" alt=""><img class="card-selfie" id="bSelfie" src="" alt=""><div class="b-vig"></div><div class="b-fade"></div></div>
-        <div class="b-tbadge"><span class="b-tby">2026</span><span class="b-tbs">BOWMAN CHROME</span></div>
+        <div class="b-tbadge"><span class="b-tby">2026</span><span class="b-tbs">FOWMAN CHROME</span></div>
         <div class="b-tbr" id="bEd">PROSPECT</div>
         <div class="b-body">
           <div class="b-acc"></div>
@@ -438,13 +457,13 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
         <div class="gen-ovl hide" id="bOvl"><div class="gen-ovl-lbl">GENERATING SCENE…</div><div class="gen-bar-wrap"><div class="gen-bar" id="bGbar"></div></div></div>
       </div>
 
-      <!-- PANINI -->
-      <div class="card panini" id="cPanini" style="display:none">
+      <!-- FRIZIM -->
+      <div class="card frizim" id="cFrizim" style="display:none">
         <div class="p-bg"></div><div class="p-lines"></div><div class="p-prism"></div>
         <div class="p-photo"><img class="card-scene" id="pScene" src="" alt=""><img class="card-selfie" id="pSelfie" src="" alt=""><div class="p-vig"></div><div class="p-fade"></div></div>
         <div class="p-edge"></div><div class="p-sl"></div><div class="p-sr"></div>
-        <div class="p-tl"><span class="p-tl-lg" id="pLg">NBA</span><span class="p-tl-yr">2026 PRIZM</span></div>
-        <div class="p-tr"><span class="p-trt" id="pEd">PRIZM</span></div>
+        <div class="p-tl"><span class="p-tl-lg" id="pLg">NBA</span><span class="p-tl-yr">2026 FRIZIM</span></div>
+        <div class="p-tr"><span class="p-trt" id="pEd">FRIZIM</span></div>
         <div class="p-body">
           <div class="p-cline"></div>
           <div class="p-name" id="pName">NAME</div>
@@ -457,6 +476,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
 
       <div class="cacts">
         <button class="btn-act hi" id="btnDl"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save</button>
+        <button class="btn-act hi print-btn" id="btnPrint"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print Card</button>
         <button class="btn-act" id="btnRegen"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>New Scene</button>
         <button class="btn-act" id="btnCycle">Switch Style</button>
       </div>
@@ -466,7 +486,40 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
   </div>
 </div>
 
-<footer>© 2026 CardForge AI · AI scenes by Puter.js + FLUX · Card styles inspired by Topps, Bowman & Panini — not affiliated</footer>
+<!-- PRINT MODAL -->
+<div class="modal-overlay" id="printModal" style="display:none">
+  <div class="modal-box">
+    <button class="modal-close" id="printModalClose">&times;</button>
+    <h2 class="modal-title">🖨️ Print Physical Cards</h2>
+    <p class="modal-desc">Turn your digital card into a real, professional-quality trading card you can hold.</p>
+    <div class="print-options">
+      <div class="print-opt">
+        <div class="print-opt-icon">🏠</div>
+        <h3>Print at Home</h3>
+        <p>Download the high-res print file (300 DPI), cut to standard 2.5" × 3.5" trading card size, and print on cardstock.</p>
+        <button class="btn-print-action" id="btnPrintHQ">Download Print File (300 DPI)</button>
+        <span class="print-price">Free</span>
+      </div>
+      <div class="print-opt featured">
+        <div class="print-opt-icon">✨</div>
+        <h3>Pro Print Service</h3>
+        <p>Professional card printing on premium cardstock with gloss or matte finish. Ships to your door.</p>
+        <button class="btn-print-action pro" id="btnPrintPro" disabled>Coming Soon</button>
+        <span class="print-price">From $4.99/card</span>
+      </div>
+      <div class="print-opt">
+        <div class="print-opt-icon">📦</div>
+        <h3>Bulk Order</h3>
+        <p>Order 10+ copies for your team, league, or event. Volume discounts available.</p>
+        <button class="btn-print-action" id="btnPrintBulk" disabled>Coming Soon</button>
+        <span class="print-price">From $2.99/card</span>
+      </div>
+    </div>
+    <p class="print-tip">💡 <strong>Tip:</strong> For best results at home, use 110lb cardstock and a color laser printer. Standard trading cards are 2.5" × 3.5" (63.5mm × 88.9mm).</p>
+  </div>
+</div>
+
+<footer>© 2026 CardForge AI · AI scenes by Puter.js + FLUX · Original card designs — not affiliated with any trading card company</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://js.puter.com/v2/"></script>
@@ -566,7 +619,7 @@ const SCENE_PROMPTS={
   }
 };
 
-let imgData=null, selSport='Football', selStyle='topps', selScene='throw', busy=false;
+let imgData=null, selSport='Football', selStyle='fopps', selScene='throw', busy=false;
 
 /* ── STYLE TABS ── */
 document.querySelectorAll('.stab').forEach(b=>b.addEventListener('click',()=>{
@@ -631,11 +684,49 @@ function loadFile(f){
 document.getElementById('btnGen').addEventListener('click',generate);
 document.getElementById('btnRegen').addEventListener('click',generate);
 document.getElementById('btnCycle').addEventListener('click',()=>{
-  const s=['topps','bowman','panini']; const ni=(s.indexOf(selStyle)+1)%3; selStyle=s[ni];
+  const s=['fopps','fowman','frizim']; const ni=(s.indexOf(selStyle)+1)%3; selStyle=s[ni];
   document.querySelectorAll('.stab').forEach(b=>b.classList.toggle('on',b.dataset.style===selStyle));
   if(document.getElementById('stResult').style.display==='flex') showCard();
 });
 document.getElementById('btnDl').addEventListener('click', downloadCard);
+
+/* ── PRINT MODAL ── */
+document.getElementById('btnPrint').addEventListener('click',()=>{document.getElementById('printModal').style.display='flex';});
+document.getElementById('printModalClose').addEventListener('click',()=>{document.getElementById('printModal').style.display='none';});
+document.getElementById('printModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget)e.currentTarget.style.display='none';});
+document.getElementById('btnPrintHQ').addEventListener('click', downloadPrintFile);
+
+async function downloadPrintFile(){
+  const cardId={fopps:'cFopps',fowman:'cFowman',frizim:'cFrizim'}[selStyle];
+  const card=document.getElementById(cardId);
+  const btn=document.getElementById('btnPrintHQ');
+  if(!card||card.style.display==='none'){alert('Generate a card first!');return;}
+  btn.textContent='Rendering 300 DPI…';btn.disabled=true;
+
+  const sceneId={fopps:'tScene',fowman:'bScene',frizim:'pScene'}[selStyle];
+  const sceneEl=document.getElementById(sceneId);
+  if(sceneEl&&sceneEl.src&&!sceneEl.complete){
+    btn.textContent='Waiting for scene…';
+    await new Promise(res=>{const t=setTimeout(res,30000);sceneEl.addEventListener('load',()=>{clearTimeout(t);res();},{once:true});sceneEl.addEventListener('error',()=>{clearTimeout(t);res();},{once:true});});
+  }
+
+  try{
+    const canvas=await html2canvas(card,{
+      scale:4,
+      backgroundColor:null,useCORS:true,allowTaint:false,logging:false,
+      onclone:(clonedDoc)=>{const el=clonedDoc.getElementById(cardId);el.style.transform='none';el.style.transition='none';el.style.animation='none';el.style.boxShadow='none';}
+    });
+    const link=document.createElement('a');
+    link.download='cardforge-print-'+selStyle+'-'+Date.now()+'.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+  }catch(e){
+    console.error('Print export error:',e);
+    alert('Export failed — try the regular Save button instead.');
+  }finally{
+    btn.textContent='Download Print File (300 DPI)';btn.disabled=false;
+  }
+}
 
 /* ── CANVAS FALLBACK SCENE GENERATOR ── */
 function generateSceneBg(sport, scene, c1, c2){
@@ -844,12 +935,12 @@ async function fetchAIStats(sport, pos, scene, name, team){
 
 /* ── CARD DOWNLOAD ── */
 async function downloadCard(){
-  const cardId={topps:'cTopps',bowman:'cBowman',panini:'cPanini'}[selStyle];
+  const cardId={fopps:'cFopps',fowman:'cFowman',frizim:'cFrizim'}[selStyle];
   const card=document.getElementById(cardId);
   const btn=document.getElementById('btnDl');
 
   // If AI scene is still loading, wait up to 30s for it
-  const sceneId={topps:'tScene',bowman:'bScene',panini:'pScene'}[selStyle];
+  const sceneId={fopps:'tScene',fowman:'bScene',frizim:'pScene'}[selStyle];
   const sceneEl=document.getElementById(sceneId);
   if(sceneEl&&sceneEl.src&&!sceneEl.complete){
     btn.textContent='Waiting for scene…';
@@ -1084,8 +1175,8 @@ function stepSet(n,state){
 }
 
 function showCard(){
-  ['cTopps','cBowman','cPanini'].forEach(id=>document.getElementById(id).style.display='none');
-  const m={topps:'cTopps',bowman:'cBowman',panini:'cPanini'};
+  ['cFopps','cFowman','cFrizim'].forEach(id=>document.getElementById(id).style.display='none');
+  const m={fopps:'cFopps',fowman:'cFowman',frizim:'cFrizim'};
   const el=document.getElementById(m[selStyle]);
   el.style.display='block';
   el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
