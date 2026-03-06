@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CardForge AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Anton&family=Teko:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0b0b0d; --bg2:#111115; --bg3:#18181f;
+  --bdr:rgba(255,255,255,0.07); --bdr2:rgba(255,255,255,0.12);
+  --gold:#c9952a; --gold2:#e8b84b; --gold3:#f5d070;
+  --txt:#ede8df; --muted:#55555f; --muted2:#8a8a98;
+  --green:#2ecc71; --red:#e74c3c;
+  --cw:295px; --ch:412px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:999;pointer-events:none;opacity:0.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ── HEADER ── */
+header{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:15px 40px;border-bottom:1px solid var(--bdr);background:rgba(11,11,13,0.97);backdrop-filter:blur(12px);}
+.logo{font-family:'Oswald',sans-serif;font-size:1.2rem;font-weight:600;letter-spacing:3px;}
+.logo b{color:var(--gold2);}
+.api-status{display:flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);}
+.dot.ok{background:var(--green);box-shadow:0 0 6px var(--green);}
+.dot.err{background:var(--red);}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:5;text-align:center;padding:44px 24px 28px;}
+.hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:350px;background:radial-gradient(ellipse,rgba(201,149,42,0.06) 0%,transparent 70%);pointer-events:none;}
+.hero-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.hero-tag::before,.hero-tag::after{content:'';display:block;width:28px;height:1px;background:var(--gold);}
+.hero h1{font-family:'Anton',sans-serif;font-size:clamp(3rem,9vw,7rem);letter-spacing:2px;line-height:0.88;}
+.hero h1 span{display:block;color:transparent;-webkit-text-stroke:1.5px var(--gold2);}
+.hero-sub{margin-top:14px;font-size:0.95rem;color:var(--muted2);font-weight:300;max-width:500px;margin-inline:auto;line-height:1.5;}
+
+/* api key notice */
+.api-notice{display:inline-flex;align-items:flex-start;gap:10px;margin-top:20px;padding:12px 18px;border:1px solid rgba(201,149,42,0.25);border-radius:4px;background:rgba(201,149,42,0.05);max-width:640px;text-align:left;}
+.api-notice-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
+.api-notice p{font-size:0.8rem;color:var(--muted2);line-height:1.5;}
+.api-notice a{color:var(--gold2);text-decoration:none;}
+.api-notice a:hover{text-decoration:underline;}
+
+/* style tabs */
+.style-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;flex-wrap:wrap;}
+.stab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 16px;border:1px solid var(--bdr);border-radius:4px;background:none;cursor:pointer;transition:all 0.2s;min-width:100px;}
+.stab:hover{border-color:var(--bdr2);background:rgba(255,255,255,0.02);}
+.stab.on{border-color:var(--gold2);background:rgba(232,184,75,0.07);}
+.stab-brand{font-family:'Oswald',sans-serif;font-size:0.85rem;letter-spacing:2px;color:var(--txt);}
+.stab-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.stab.on .stab-brand{color:var(--gold2);}
+.stab.on .stab-sub{color:var(--gold);}
+
+/* ── WORKSPACE ── */
+.ws{position:relative;z-index:5;display:grid;grid-template-columns:355px 1fr;gap:22px;max-width:1150px;margin:0 auto;padding:0 24px 80px;}
+
+/* panels */
+.panel{background:var(--bg2);border:1px solid var(--bdr);border-radius:5px;overflow:hidden;margin-bottom:12px;}
+.panel:last-child{margin-bottom:0;}
+.ph{padding:10px 15px;border-bottom:1px solid var(--bdr);background:rgba(255,255,255,0.02);display:flex;align-items:center;gap:9px;}
+.stepnum{width:20px;height:20px;border-radius:50%;background:var(--gold);color:#000;font-family:'Oswald',sans-serif;font-size:0.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ph-title{font-family:'Oswald',sans-serif;font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;font-weight:400;}
+
+/* api key input */
+.apikey-body{padding:14px;}
+.apikey-row{display:flex;gap:8px;}
+.apikey-row input{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--bdr);border-radius:3px;padding:9px 12px;color:var(--txt);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.18s;font-family:monospace;}
+.apikey-row input:focus{border-color:var(--gold);}
+.btn-save-key{background:var(--gold);color:#000;border:none;border-radius:3px;padding:9px 14px;font-family:'Oswald',sans-serif;font-size:0.7rem;letter-spacing:2px;cursor:pointer;white-space:nowrap;transition:all 0.18s;}
+.btn-save-key:hover{filter:brightness(1.1);}
+.key-hint{font-size:0.72rem;color:var(--muted);margin-top:7px;line-height:1.4;}
+.key-hint a{color:var(--gold2);text-decoration:none;}
+
+/* upload */
+.upbody{padding:13px;}
+.dz{border:1px dashed rgba(201,149,42,0.22);border-radius:4px;padding:26px 14px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(201,149,42,0.02);position:relative;}
+.dz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.dz:hover,.dz.over{border-color:var(--gold2);background:rgba(201,149,42,0.05);}
+.dz-icon{width:42px;height:42px;margin:0 auto 10px;border:1px solid rgba(201,149,42,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.dz-icon svg{stroke:var(--gold);fill:none;stroke-width:1.5;width:19px;height:19px;}
+.dz-lbl{font-family:'Oswald',sans-serif;font-size:0.88rem;letter-spacing:1px;margin-bottom:2px;}
+.dz-sub{font-size:0.7rem;color:var(--muted);}
+.pvw{display:none;position:relative;border-radius:3px;overflow:hidden;}
+.pvw img{width:100%;height:190px;object-fit:cover;display:block;}
+.pvw-bar{position:absolute;bottom:0;inset-inline:0;background:linear-gradient(transparent,rgba(11,11,13,0.94));padding:9px 12px;display:flex;justify-content:space-between;align-items:center;}
+.pvw-ok{font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:2px;color:var(--green);}
+.btn-chg{background:none;border:1px solid var(--bdr);padding:3px 8px;color:var(--muted2);cursor:pointer;font-size:0.68rem;font-family:'Barlow',sans-serif;border-radius:2px;transition:all 0.18s;}
+.btn-chg:hover{border-color:var(--gold);color:var(--gold);}
+
+/* sport grid */
+.sg{padding:11px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+.sp{border:1px solid var(--bdr);border-radius:3px;padding:8px 4px;text-align:center;cursor:pointer;transition:all 0.18s;background:none;}
+.sp:hover{border-color:var(--bdr2);background:rgba(255,255,255,0.02);}
+.sp.on{border-color:var(--gold2);background:rgba(232,184,75,0.08);}
+.sp em{font-size:1.25rem;display:block;margin-bottom:2px;font-style:normal;line-height:1;}
+.sp s{font-family:'Barlow Condensed',sans-serif;font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;text-decoration:none;}
+.sp.on s{color:var(--gold);}
+
+/* scene grid */
+.scene-body{padding:0 12px 13px;}
+.scene-lbl{font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px;}
+.scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.scb{border:1px solid var(--bdr);border-radius:3px;padding:7px 9px;text-align:left;cursor:pointer;background:none;transition:all 0.18s;width:100%;}
+.scb:hover{border-color:var(--bdr2);background:rgba(255,255,255,0.02);}
+.scb.on{border-color:var(--gold2);background:rgba(232,184,75,0.07);}
+.sc-ic{font-size:1rem;display:block;margin-bottom:2px;}
+.sc-nm{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted2);display:block;}
+.scb.on .sc-nm{color:var(--gold2);}
+
+/* form */
+.fb{padding:11px 13px 13px;}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fi{display:flex;flex-direction:column;gap:4px;}
+.fi.full{grid-column:1/-1;}
+.fi label{font-family:'Oswald',sans-serif;font-size:0.58rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);}
+.fi input,.fi select{background:rgba(255,255,255,0.04);border:1px solid var(--bdr);border-radius:2px;padding:8px 9px;color:var(--txt);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.18s;-webkit-appearance:none;}
+.fi input:focus,.fi select:focus{border-color:var(--gold);}
+.fi select option{background:var(--bg2);}
+
+.gw{padding:0 13px 13px;}
+.btn-gen{width:100%;background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);color:#000;border:none;border-radius:3px;padding:13px;font-family:'Oswald',sans-serif;font-size:0.92rem;font-weight:600;letter-spacing:4px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.btn-gen::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:transform 0.5s;}
+.btn-gen:hover::before{transform:translateX(100%);}
+.btn-gen:hover{filter:brightness(1.08);box-shadow:0 5px 20px rgba(201,149,42,0.35);}
+.btn-gen:disabled{opacity:0.38;cursor:not-allowed;filter:none;box-shadow:none;}
+
+/* ── STAGE ── */
+.stage{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:540px;padding:24px 14px;gap:0;}
+
+.empty{display:flex;flex-direction:column;align-items:center;gap:13px;opacity:0.3;}
+.ph-crd{width:var(--cw);height:var(--ch);border:1.5px dashed rgba(201,149,42,0.22);border-radius:14px;display:flex;align-items:center;justify-content:center;}
+.ph-crd svg{width:54px;height:54px;stroke:rgba(201,149,42,0.5);fill:none;stroke-width:1;}
+.empty-lbl{font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:4px;text-transform:uppercase;color:var(--muted);}
+
+/* loading */
+.loading{display:none;flex-direction:column;align-items:center;gap:16px;text-align:center;}
+.spin-ring{width:52px;height:52px;border:2px solid rgba(201,149,42,0.1);border-top-color:var(--gold);border-right-color:var(--gold2);border-radius:50%;animation:spin 0.85s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin-ttl{font-family:'Oswald',sans-serif;font-size:0.95rem;letter-spacing:5px;color:var(--gold2);}
+.steps-list{display:flex;flex-direction:column;gap:5px;width:100%;max-width:290px;}
+.step-row{display:flex;align-items:center;gap:9px;padding:6px 11px;border:1px solid var(--bdr);border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);transition:all 0.3s;background:rgba(255,255,255,0.01);}
+.step-row.active{border-color:rgba(201,149,42,0.3);color:var(--gold2);background:rgba(201,149,42,0.05);}
+.step-row.done{border-color:rgba(46,204,113,0.2);color:#4ade80;background:rgba(46,204,113,0.04);}
+.step-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.step-row.active .step-dot{animation:pd 1s infinite;}
+@keyframes pd{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* result */
+.result{display:none;flex-direction:column;align-items:center;gap:16px;}
+
+/* ══════════════════════════════════
+   CARDS
+══════════════════════════════════ */
+.card{width:var(--cw);height:var(--ch);position:relative;overflow:hidden;border-radius:14px;cursor:pointer;transform:perspective(1000px) rotateY(-5deg) rotateX(3deg);transition:transform 0.55s cubic-bezier(0.23,1,0.32,1),box-shadow 0.55s ease;flex-shrink:0;user-select:none;}
+.card:hover{transform:perspective(1000px) rotateY(0) rotateX(0) scale(1.05);}
+
+/* ── TOPPS CHROME ── */
+.topps{box-shadow:0 28px 80px rgba(0,0,0,0.75),0 0 0 1px rgba(255,255,255,0.1);}
+.topps:hover{box-shadow:0 40px 100px rgba(0,0,0,0.85),0 0 0 2px rgba(255,255,255,0.22),0 0 40px rgba(255,255,255,0.04);}
+.t-stock{position:absolute;inset:0;background:#f2ede2;}
+.t-foil{position:absolute;inset:0;z-index:30;pointer-events:none;
+  background:linear-gradient(108deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.6) 16%,rgba(200,220,255,0.18) 26%,rgba(255,255,255,0) 36%,rgba(255,210,80,0.12) 50%,rgba(255,255,255,0) 64%,rgba(210,255,210,0.1) 74%,rgba(255,255,255,0.38) 85%,rgba(255,255,255,0) 100%);
+  mix-blend-mode:screen;}
+.t-refract{position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:repeating-linear-gradient(70deg,transparent 0px,transparent 2px,rgba(160,120,30,0.035) 2px,rgba(160,120,30,0.035) 4px);}
+.t-topbar{position:absolute;top:0;left:0;right:0;height:7px;z-index:20;}
+.t-photo{position:absolute;top:7px;left:0;right:0;height:263px;overflow:hidden;z-index:6;}
+.t-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+.card-scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:1;}
+.card-selfie{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:2;-webkit-mask-image:linear-gradient(to bottom,black 0%,black 45%,transparent 92%);mask-image:linear-gradient(to bottom,black 0%,black 45%,transparent 92%);}
+.t-pfade{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,rgba(242,237,226,0.88) 70%,rgba(242,237,226,1) 100%);z-index:7;}
+.t-yr-badge{position:absolute;top:13px;left:9px;z-index:25;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);border-radius:2px;padding:2px 6px;}
+.t-yr{font-family:'Oswald',sans-serif;font-size:0.62rem;font-weight:700;color:#fff;letter-spacing:0.5px;display:block;line-height:1.15;}
+.t-set{font-family:'Barlow Condensed',sans-serif;font-size:0.43rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);display:block;}
+.t-flag{position:absolute;top:13px;right:0;z-index:25;background:linear-gradient(135deg,#a87a0a,#edbe3a);color:#000;font-family:'Oswald',sans-serif;font-size:0.5rem;font-weight:700;letter-spacing:1.5px;padding:3px 10px 3px 13px;clip-path:polygon(11% 0,100% 0,100% 100%,11% 100%,0 50%);}
+.t-body{position:absolute;bottom:0;left:0;right:0;padding:6px 10px 7px;z-index:15;background:linear-gradient(180deg,rgba(242,237,226,0) 0%,#f2ede2 16%);}
+.t-cbar{height:3px;border-radius:2px;margin-bottom:6px;}
+.t-name{font-family:'Oswald',sans-serif;font-size:1.45rem;font-weight:700;color:#0c0c10;letter-spacing:0.5px;line-height:1;margin-bottom:2px;}
+.t-subrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.t-pos{font-family:'Barlow Condensed',sans-serif;font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:#555;font-weight:600;}
+.t-team{font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:1.5px;font-weight:700;}
+.t-stats{display:flex;border-top:1px solid rgba(0,0,0,0.09);padding-top:5px;}
+.t-stat{flex:1;text-align:center;border-right:1px solid rgba(0,0,0,0.07);}
+.t-stat:last-child{border-right:none;}
+.t-sv{font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;color:#0c0c10;display:block;line-height:1;}
+.t-sk{font-family:'Barlow Condensed',sans-serif;font-size:0.44rem;letter-spacing:2px;text-transform:uppercase;color:#888;display:block;margin-top:1px;}
+.t-foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
+.t-num{font-family:'Barlow Condensed',sans-serif;font-size:0.5rem;color:rgba(0,0,0,0.28);letter-spacing:1px;}
+.t-lgbox{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(0,0,0,0.1);}
+.t-lgbox span{font-family:'Oswald',sans-serif;font-size:0.48rem;font-weight:700;}
+
+/* ── BOWMAN ── */
+.bowman{box-shadow:0 28px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(0,200,150,0.15);}
+.bowman:hover{box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 0 2px rgba(0,210,155,0.45),0 0 50px rgba(0,170,120,0.15);}
+.b-bg{position:absolute;inset:0;background:linear-gradient(165deg,#0d1824 0%,#060e18 45%,#060b10 100%);}
+.b-tex{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(-48deg,transparent,transparent 3px,rgba(0,200,150,0.018) 3px,rgba(0,200,150,0.018) 4px);}
+.b-foil{position:absolute;inset:0;z-index:30;pointer-events:none;background:linear-gradient(112deg,transparent 0%,rgba(0,255,180,0.07) 22%,transparent 42%,rgba(80,210,255,0.05) 56%,transparent 72%,rgba(0,200,150,0.06) 86%,transparent 100%);mix-blend-mode:screen;}
+.b-photo{position:absolute;inset:0;z-index:4;}
+.b-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:contrast(1.05) saturate(1.08);}
+.b-vig{position:absolute;inset:0;z-index:5;background:radial-gradient(ellipse at 50% 22%,transparent 28%,rgba(5,10,16,0.52) 100%);}
+.b-fade{position:absolute;bottom:0;left:0;right:0;height:205px;z-index:6;background:linear-gradient(transparent,rgba(6,14,24,0.97) 52%,rgba(5,10,16,1) 100%);}
+.b-tbadge{position:absolute;top:13px;left:11px;z-index:25;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);border:1px solid rgba(0,200,150,0.18);border-radius:2px;padding:3px 8px;}
+.b-tby{font-family:'Oswald',sans-serif;font-size:0.58rem;font-weight:700;color:#fff;letter-spacing:1px;display:block;line-height:1.1;}
+.b-tbs{font-family:'Barlow Condensed',sans-serif;font-size:0.43rem;letter-spacing:2px;text-transform:uppercase;color:rgba(0,220,160,0.7);display:block;}
+.b-tbr{position:absolute;top:13px;right:11px;z-index:25;background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.28);border-radius:2px;padding:3px 8px;font-family:'Oswald',sans-serif;font-size:0.5rem;letter-spacing:2px;color:rgba(0,225,160,0.88);}
+.b-body{position:absolute;bottom:0;left:0;right:0;padding:9px 12px 9px;z-index:10;}
+.b-acc{height:2px;background:linear-gradient(90deg,rgba(0,200,150,0.8),rgba(0,200,150,0.15),transparent);margin-bottom:7px;border-radius:1px;}
+.b-name{font-family:'Oswald',sans-serif;font-size:1.45rem;font-weight:700;color:#fff;letter-spacing:1px;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.5);}
+.b-sub{display:flex;justify-content:space-between;align-items:center;margin-top:3px;margin-bottom:7px;}
+.b-pos{font-family:'Barlow Condensed',sans-serif;font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:rgba(0,210,155,0.85);}
+.b-team{font-family:'Oswald',sans-serif;font-size:0.58rem;letter-spacing:2px;color:rgba(255,255,255,0.38);}
+.b-stats{display:flex;gap:12px;}
+.b-sv{font-family:'Teko',sans-serif;font-size:1.35rem;font-weight:500;color:#fff;display:block;line-height:1;}
+.b-sk{font-family:'Barlow Condensed',sans-serif;font-size:0.44rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(0,200,150,0.58);display:block;}
+.b-foot{display:flex;justify-content:space-between;margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.05);}
+.b-cn{font-family:'Barlow Condensed',sans-serif;font-size:0.48rem;color:rgba(255,255,255,0.18);letter-spacing:1px;}
+.b-lg{font-family:'Oswald',sans-serif;font-size:0.48rem;letter-spacing:1px;color:rgba(0,210,155,0.45);}
+
+/* ── PANINI PRIZM ── */
+.panini{box-shadow:0 28px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(140,70,255,0.22);}
+.panini:hover{box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 0 2px rgba(170,90,255,0.55),0 0 65px rgba(130,55,255,0.22);}
+.p-bg{position:absolute;inset:0;background:linear-gradient(168deg,#080410 0%,#0a0618 30%,#060310 60%,#040208 100%);}
+.p-prism{position:absolute;inset:0;z-index:30;pointer-events:none;background:conic-gradient(from 195deg at 55% 32%,rgba(255,50,150,0.065),rgba(255,130,30,0.055),rgba(255,240,30,0.055),rgba(30,240,120,0.055),rgba(30,155,255,0.065),rgba(155,30,255,0.065),rgba(255,30,200,0.055),rgba(255,50,150,0.045));mix-blend-mode:screen;}
+.p-lines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(-33deg,transparent,transparent 4px,rgba(140,70,255,0.022) 4px,rgba(140,70,255,0.022) 5px);}
+.p-photo{position:absolute;inset:0;z-index:4;}
+.p-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:contrast(1.1) saturate(1.18);}
+.p-vig{position:absolute;inset:0;z-index:5;background:radial-gradient(ellipse at 50% 18%,transparent 22%,rgba(4,2,12,0.58) 100%);}
+.p-fade{position:absolute;bottom:0;left:0;right:0;height:225px;z-index:6;background:linear-gradient(transparent,rgba(6,3,14,0.98) 52%,rgba(4,2,10,1) 100%);}
+.p-edge{position:absolute;inset:0;z-index:31;pointer-events:none;border-radius:14px;box-shadow:inset 0 0 0 1.5px rgba(140,70,255,0.2),inset 0 0 22px rgba(140,70,255,0.04);}
+.p-sl{position:absolute;top:0;left:11px;bottom:0;width:2.5px;z-index:20;background:linear-gradient(180deg,transparent,rgba(140,70,255,0.55) 22%,rgba(255,180,50,0.38) 50%,rgba(70,190,255,0.55) 78%,transparent);}
+.p-sr{position:absolute;top:0;right:11px;bottom:0;width:2.5px;z-index:20;background:linear-gradient(180deg,transparent,rgba(70,190,255,0.48) 22%,rgba(255,90,200,0.38) 50%,rgba(140,70,255,0.48) 78%,transparent);}
+.p-tl{position:absolute;top:13px;left:13px;z-index:25;}
+.p-tl-lg{font-family:'Anton',sans-serif;font-size:0.7rem;letter-spacing:1.5px;color:rgba(160,100,255,0.9);display:block;text-shadow:0 0 12px rgba(140,70,255,0.45);}
+.p-tl-yr{font-family:'Barlow Condensed',sans-serif;font-size:0.46rem;letter-spacing:2px;color:rgba(255,255,255,0.28);display:block;margin-top:2px;}
+.p-tr{position:absolute;top:13px;right:13px;z-index:25;background:linear-gradient(135deg,rgba(140,70,255,0.22),rgba(70,180,255,0.14));border:1px solid rgba(140,70,255,0.38);border-radius:2px;padding:4px 8px;backdrop-filter:blur(4px);}
+.p-trt{font-family:'Oswald',sans-serif;font-size:0.5rem;letter-spacing:2px;background:linear-gradient(90deg,#c87fff,#60c8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.p-body{position:absolute;bottom:0;left:0;right:0;padding:9px 13px 9px;z-index:12;}
+.p-cline{height:2px;background:linear-gradient(90deg,transparent,rgba(140,70,255,0.7) 18%,rgba(255,200,50,0.5) 50%,rgba(70,190,255,0.7) 82%,transparent);margin-bottom:7px;border-radius:1px;}
+.p-name{font-family:'Anton',sans-serif;font-size:1.42rem;letter-spacing:2px;color:#fff;line-height:1;text-shadow:0 0 28px rgba(140,70,255,0.4);}
+.p-sub{display:flex;justify-content:space-between;align-items:center;margin-top:2px;margin-bottom:8px;}
+.p-pos{font-family:'Oswald',sans-serif;font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(90deg,rgba(175,95,255,0.9),rgba(90,175,255,0.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.p-team{font-family:'Oswald',sans-serif;font-size:0.58rem;letter-spacing:2px;color:rgba(255,255,255,0.28);}
+.p-stats{display:flex;border-top:1px solid rgba(140,70,255,0.14);padding-top:7px;}
+.p-stat{flex:1;text-align:center;}
+.p-sv{font-family:'Teko',sans-serif;font-size:1.28rem;font-weight:500;color:#fff;display:block;line-height:1;}
+.p-sk{font-family:'Barlow Condensed',sans-serif;font-size:0.44rem;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,rgba(175,95,255,0.58),rgba(90,175,255,0.58));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-top:1px;}
+.p-foot{display:flex;justify-content:space-between;margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.04);}
+.p-num{font-family:'Barlow Condensed',sans-serif;font-size:0.48rem;color:rgba(255,255,255,0.14);letter-spacing:1px;}
+.p-serial{font-family:'Oswald',sans-serif;font-size:0.5rem;letter-spacing:1px;background:linear-gradient(90deg,rgba(255,175,55,0.7),rgba(255,135,35,0.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* img generating overlay */
+.gen-ovl{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:rgba(10,8,18,0.88);backdrop-filter:blur(10px);border-radius:14px;transition:opacity 0.4s;}
+.gen-ovl.hide{opacity:0;pointer-events:none;}
+.gen-bar-wrap{width:55%;height:2px;background:rgba(255,255,255,0.07);border-radius:1px;overflow:hidden;}
+.gen-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));width:0;transition:width 0.4s ease;border-radius:1px;}
+.gen-ovl-lbl{font-family:'Oswald',sans-serif;font-size:0.68rem;letter-spacing:3px;color:var(--gold2);}
+
+/* actions */
+.cacts{display:flex;gap:7px;}
+.btn-act{background:none;border:1px solid var(--bdr);border-radius:3px;padding:8px 14px;color:var(--muted2);font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:5px;}
+.btn-act:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,149,42,0.05);}
+.btn-act.hi{background:rgba(201,149,42,0.08);border-color:rgba(201,149,42,0.38);color:var(--gold2);}
+.btn-act svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;}
+.scout-note{max-width:295px;text-align:center;font-size:0.76rem;color:var(--muted2);font-style:italic;line-height:1.6;padding:9px 13px;border:1px solid var(--bdr);border-radius:3px;background:rgba(255,255,255,0.015);}
+
+footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px solid var(--bdr);font-size:0.68rem;color:var(--muted);letter-spacing:1px;}
+
+@media(max-width:820px){.ws{grid-template-columns:1fr;} header{padding:13px 18px;} .stage{min-height:460px;}}
+@keyframes cardIn{from{opacity:0;transform:perspective(1000px) rotateY(-5deg) rotateX(3deg) translateY(22px) scale(0.96);}to{opacity:1;transform:perspective(1000px) rotateY(-5deg) rotateX(3deg) translateY(0) scale(1);}}
+.card.in{animation:cardIn 0.65s cubic-bezier(0.23,1,0.32,1) forwards;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Card<b>Forge</b> AI</div>
+  <div class="api-status"><div class="dot ok"></div><span>Ready — 100% free</span></div>
+</header>
+
+<section class="hero">
+  <div class="hero-tag">AI Sports Card Studio</div>
+  <h1>YOUR FACE<span>YOUR CARD</span></h1>
+  <p class="hero-sub">Upload your selfie — AI generates a real sports action scene with your face, then prints it on a collector-grade card</p>
+
+  <div class="api-notice">
+    <span class="api-notice-icon">⚡</span>
+    <p>100% free — no API keys, no signup. Pick your sport, upload your selfie, and get a collector-grade card with a dynamic sports scene background. Just upload and go.</p>
+  </div>
+
+  <div class="style-row">
+    <button class="stab on" data-style="topps"><span class="stab-brand">TOPPS</span><span class="stab-sub">Chrome Series</span></button>
+    <button class="stab" data-style="bowman"><span class="stab-brand">BOWMAN</span><span class="stab-sub">Draft Chrome</span></button>
+    <button class="stab" data-style="panini"><span class="stab-brand">PANINI</span><span class="stab-sub">Prizm</span></button>
+  </div>
+</section>
+
+<div class="ws">
+  <div>
+
+    <!-- UPLOAD -->
+    <div class="panel">
+      <div class="ph"><div class="stepnum">1</div><div class="ph-title">Upload Your Selfie</div></div>
+      <div class="upbody">
+        <div class="dz" id="dz">
+          <input type="file" id="fileIn" accept="image/*">
+          <div class="dz-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <p class="dz-lbl">Drop photo here</p>
+          <p class="dz-sub">Clear selfie or portrait · PNG JPG WEBP · Max 10MB</p>
+        </div>
+        <div class="pvw" id="pvw"><img id="pvwImg" src="" alt=""><div class="pvw-bar"><span class="pvw-ok">✓ Ready</span><button class="btn-chg" id="btnChg">Change</button></div></div>
+      </div>
+    </div>
+
+    <!-- SPORT -->
+    <div class="panel">
+      <div class="ph"><div class="stepnum">2</div><div class="ph-title">Sport</div></div>
+      <div class="sg">
+        <div class="sp on" data-sport="Football"><em>🏈</em><s>Football</s></div>
+        <div class="sp" data-sport="Baseball"><em>⚾</em><s>Baseball</s></div>
+        <div class="sp" data-sport="Basketball"><em>🏀</em><s>Basketball</s></div>
+        <div class="sp" data-sport="Hockey"><em>🏒</em><s>Hockey</s></div>
+        <div class="sp" data-sport="Soccer"><em>⚽</em><s>Soccer</s></div>
+        <div class="sp" data-sport="Tennis"><em>🎾</em><s>Tennis</s></div>
+        <div class="sp" data-sport="Golf"><em>⛳</em><s>Golf</s></div>
+        <div class="sp" data-sport="Boxing"><em>🥊</em><s>Boxing</s></div>
+      </div>
+    </div>
+
+    <!-- SCENE -->
+    <div class="panel">
+      <div class="ph"><div class="stepnum">3</div><div class="ph-title">Action Scene</div></div>
+      <div class="scene-body">
+        <span class="scene-lbl" style="margin-top:11px">What moment gets immortalized?</span>
+        <div class="scene-grid" id="sceneGrid"></div>
+      </div>
+    </div>
+
+    <!-- DETAILS -->
+    <div class="panel">
+      <div class="ph"><div class="stepnum">4</div><div class="ph-title">Player Details</div></div>
+      <div class="fb">
+        <div class="fg">
+          <div class="fi"><label>Player Name</label><input id="iName" type="text" placeholder="Your Name" maxlength="26"></div>
+          <div class="fi"><label>Jersey #</label><input id="iJersey" type="text" placeholder="00" maxlength="3"></div>
+          <div class="fi"><label>Position</label><input id="iPos" type="text" placeholder="e.g. QB" maxlength="20"></div>
+          <div class="fi"><label>Team Name</label><input id="iTeam" type="text" placeholder="Team" maxlength="18"></div>
+          <div class="fi full"><label>Edition</label>
+            <select id="iEd">
+              <option value="ROOKIE CARD">🌟 Rookie Card</option>
+              <option value="ALL-STAR">⭐ All-Star Edition</option>
+              <option value="DRAFT PICK">🎯 Draft Pick</option>
+              <option value="PRIZM">💎 Prizm</option>
+              <option value="CHROME REFRACTOR">🔮 Chrome Refractor</option>
+              <option value="AUTO RC">✍️ Autograph RC</option>
+              <option value="1ST EDITION">🥇 1st Edition</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="gw"><button class="btn-gen" id="btnGen" disabled>⚡ FORGE MY CARD</button></div>
+    </div>
+
+  </div>
+
+  <!-- STAGE -->
+  <div class="stage" id="stage">
+
+    <div class="empty" id="stEmpty">
+      <div class="ph-crd"><svg viewBox="0 0 80 112"><rect x="2" y="2" width="76" height="108" rx="8" stroke-width="1.5"/><rect x="8" y="8" width="64" height="64" rx="3" stroke-width="1"/><line x1="8" y1="82" x2="52" y2="82"/><line x1="8" y1="91" x2="40" y2="91"/><line x1="8" y1="100" x2="30" y2="100"/></svg></div>
+      <span class="empty-lbl">Your card appears here</span>
+    </div>
+
+    <div class="loading" id="stLoad">
+      <div class="spin-ring"></div>
+      <div class="spin-ttl">CREATING YOUR CARD</div>
+      <div class="steps-list">
+        <div class="step-row" id="sr1"><div class="step-dot"></div>Building player stats</div>
+        <div class="step-row" id="sr2"><div class="step-dot"></div>Generating scene &amp; compositing</div>
+        <div class="step-row" id="sr3"><div class="step-dot"></div>Assembling card layout</div>
+        <div class="step-row" id="sr4"><div class="step-dot"></div>Printing collector card</div>
+      </div>
+    </div>
+
+    <div class="result" id="stResult">
+
+      <!-- TOPPS -->
+      <div class="card topps" id="cTopps" style="display:none">
+        <div class="t-stock"></div><div class="t-refract"></div><div class="t-foil"></div>
+        <div class="t-topbar" id="tTopbar"></div>
+        <div class="t-photo"><img class="card-scene" id="tScene" src="" alt=""><img class="card-selfie" id="tSelfie" src="" alt=""><div class="t-pfade"></div></div>
+        <div class="t-yr-badge"><span class="t-yr">2025</span><span class="t-set">TOPPS CHROME</span></div>
+        <div class="t-flag" id="tEd">ROOKIE CARD</div>
+        <div class="t-body">
+          <div class="t-cbar" id="tCbar"></div>
+          <div class="t-name" id="tName">NAME</div>
+          <div class="t-subrow"><span class="t-pos" id="tPos">POS</span><span class="t-team" id="tTeam">TEAM</span></div>
+          <div class="t-stats" id="tStats"></div>
+          <div class="t-foot"><span class="t-num" id="tNum">#001/999</span><div class="t-lgbox"><span id="tLg">NFL</span></div></div>
+        </div>
+        <div class="gen-ovl hide" id="tOvl"><div class="gen-ovl-lbl">GENERATING SCENE…</div><div class="gen-bar-wrap"><div class="gen-bar" id="tGbar"></div></div></div>
+      </div>
+
+      <!-- BOWMAN -->
+      <div class="card bowman" id="cBowman" style="display:none">
+        <div class="b-bg"></div><div class="b-tex"></div><div class="b-foil"></div>
+        <div class="b-photo"><img class="card-scene" id="bScene" src="" alt=""><img class="card-selfie" id="bSelfie" src="" alt=""><div class="b-vig"></div><div class="b-fade"></div></div>
+        <div class="b-tbadge"><span class="b-tby">2025</span><span class="b-tbs">BOWMAN CHROME</span></div>
+        <div class="b-tbr" id="bEd">PROSPECT</div>
+        <div class="b-body">
+          <div class="b-acc"></div>
+          <div class="b-name" id="bName">NAME</div>
+          <div class="b-sub"><span class="b-pos" id="bPos">POS</span><span class="b-team" id="bTeam">TEAM</span></div>
+          <div class="b-stats" id="bStats"></div>
+          <div class="b-foot"><span class="b-cn" id="bNum">#001/999</span><span class="b-lg" id="bLg">MLB</span></div>
+        </div>
+        <div class="gen-ovl hide" id="bOvl"><div class="gen-ovl-lbl">GENERATING SCENE…</div><div class="gen-bar-wrap"><div class="gen-bar" id="bGbar"></div></div></div>
+      </div>
+
+      <!-- PANINI -->
+      <div class="card panini" id="cPanini" style="display:none">
+        <div class="p-bg"></div><div class="p-lines"></div><div class="p-prism"></div>
+        <div class="p-photo"><img class="card-scene" id="pScene" src="" alt=""><img class="card-selfie" id="pSelfie" src="" alt=""><div class="p-vig"></div><div class="p-fade"></div></div>
+        <div class="p-edge"></div><div class="p-sl"></div><div class="p-sr"></div>
+        <div class="p-tl"><span class="p-tl-lg" id="pLg">NBA</span><span class="p-tl-yr">2025 PRIZM</span></div>
+        <div class="p-tr"><span class="p-trt" id="pEd">PRIZM</span></div>
+        <div class="p-body">
+          <div class="p-cline"></div>
+          <div class="p-name" id="pName">NAME</div>
+          <div class="p-sub"><span class="p-pos" id="pPos">POS</span><span class="p-team" id="pTeam">TEAM</span></div>
+          <div class="p-stats" id="pStats"></div>
+          <div class="p-foot"><span class="p-num" id="pNum">#001</span><span class="p-serial" id="pSerial">01/25</span></div>
+        </div>
+        <div class="gen-ovl hide" id="pOvl"><div class="gen-ovl-lbl">GENERATING SCENE…</div><div class="gen-bar-wrap"><div class="gen-bar" id="pGbar"></div></div></div>
+      </div>
+
+      <div class="cacts">
+        <button class="btn-act hi" id="btnDl"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save</button>
+        <button class="btn-act" id="btnRegen"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>New Scene</button>
+        <button class="btn-act" id="btnCycle">Switch Style</button>
+      </div>
+      <div class="scout-note" id="scoutNote"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer>© 2025 CardForge AI · Card styles inspired by Topps, Bowman & Panini — not affiliated</footer>
+
+<script>
+/* ── CONSTANTS ── */
+const LEAGUES={Football:'NFL',Baseball:'MLB',Basketball:'NBA',Hockey:'NHL',Soccer:'MLS',Tennis:'ATP',Golf:'PGA',Boxing:'WBC'};
+const STATS={Football:['YDS','TD','RTG'],Baseball:['AVG','HR','RBI'],Basketball:['PTS','REB','AST'],Hockey:['G','A','PTS'],Soccer:['GLS','AST','SPD'],Tennis:['ACE','W%','RNK'],Golf:['DRV','GIR','PUT'],Boxing:['KO%','W','RND']};
+const DEFPOS={Football:'QB',Baseball:'CF',Basketball:'SG',Hockey:'C',Soccer:'MID',Tennis:'PRO',Golf:'TOUR',Boxing:'HVY'};
+const SCENES={
+  Football:[{id:'throw',ic:'🏈',nm:'Throwing deep'},{id:'run',ic:'💨',nm:'Breaking free'},{id:'catch',ic:'🙌',nm:'Big catch'},{id:'celebrate',ic:'🎉',nm:'TD Celebration'}],
+  Baseball:[{id:'swing',ic:'⚾',nm:'Home run swing'},{id:'pitch',ic:'💪',nm:'Pitching'},{id:'field',ic:'🧤',nm:'Making a play'},{id:'slide',ic:'💨',nm:'Sliding home'}],
+  Basketball:[{id:'dunk',ic:'🏀',nm:'Slam dunk'},{id:'shoot',ic:'🎯',nm:'Jump shot'},{id:'drive',ic:'💨',nm:'Driving lane'},{id:'defend',ic:'🛡️',nm:'Lockdown D'}],
+  Hockey:[{id:'shot',ic:'🏒',nm:'Wrist shot'},{id:'skate',ic:'⛸️',nm:'Full speed'},{id:'celebrate',ic:'🎉',nm:'Celebrating goal'},{id:'goalie',ic:'🥅',nm:'Big save'}],
+  Soccer:[{id:'goal',ic:'⚽',nm:'Scoring goal'},{id:'dribble',ic:'💨',nm:'Dribbling'},{id:'header',ic:'🤯',nm:'Header'},{id:'freekick',ic:'🎯',nm:'Free kick'}],
+  Tennis:[{id:'serve',ic:'🎾',nm:'Serving'},{id:'backhand',ic:'💥',nm:'Backhand'},{id:'volley',ic:'🎾',nm:'Net volley'},{id:'win',ic:'🏆',nm:'Match point'}],
+  Golf:[{id:'drive',ic:'⛳',nm:'Tee drive'},{id:'putt',ic:'🎯',nm:'Putting'},{id:'approach',ic:'🌿',nm:'Approach'},{id:'celebrate',ic:'🏆',nm:'Hole-in-one!'}],
+  Boxing:[{id:'punch',ic:'🥊',nm:'Power punch'},{id:'combo',ic:'💥',nm:'Combination'},{id:'victory',ic:'🏆',nm:'Victory pose'},{id:'slip',ic:'🛡️',nm:'Slipping punches'}]
+};
+
+// Scene → detailed image generation prompt
+const SCENE_PROMPTS={
+  Football:{
+    throw:"A professional NFL quarterback dropping back in the pocket, winding up to throw a deep pass, stadium lights blazing, crowd roaring in the background, dynamic motion blur on the arm",
+    run:"A professional NFL running back exploding through a gap, breaking tackles, full sprint, low camera angle, stadium lights, game action photography",
+    catch:"A professional NFL wide receiver making a spectacular leaping catch at full extension, hands outstretched, stadium crowd visible behind",
+    celebrate:"A professional NFL player celebrating a touchdown, spiking the football, arms raised triumphantly, end zone, confetti, teammates rushing in"
+  },
+  Baseball:{
+    swing:"A professional MLB batter making contact on a massive home run swing, full follow-through, ball just leaving the bat, stadium lights at night",
+    pitch:"A professional MLB pitcher mid-windup on the mound, dynamic pitching motion, focus and intensity, stadium crowd behind",
+    field:"A professional MLB outfielder making a diving catch, fully extended horizontal in midair, bright green outfield grass",
+    slide:"A professional MLB baserunner sliding feet-first into home plate, dust cloud, catcher awaiting the throw, intense game action"
+  },
+  Basketball:{
+    dunk:"A professional NBA player soaring for a powerful slam dunk, elevated above the rim, hand on the ball, arena crowd erupting",
+    shoot:"A professional NBA player elevating for a mid-range jump shot, perfect form, defender below, arena lights",
+    drive:"A professional NBA player driving hard through the lane, splitting defenders, explosive first step, arena",
+    defend:"A professional NBA player in intense full defensive stance, hands active, one-on-one coverage, arena"
+  },
+  Hockey:{
+    shot:"A professional NHL player unleashing a powerful wrist shot, stick follow-through, ice spray, arena lights",
+    skate:"A professional NHL player skating at full speed, leaning into a turn, ice spray, arena, dynamic blur",
+    celebrate:"A professional NHL player celebrating a goal, arms raised, teammates piling on, ice arena crowd going wild",
+    goalie:"A professional NHL goalie making a spectacular glove save, body fully extended, puck visible near glove, arena"
+  },
+  Soccer:{
+    goal:"A professional soccer player blasting a shot into the top corner of the net, powerful follow-through, stadium",
+    dribble:"A professional soccer player dribbling at high speed past a defender, dynamic motion, stadium pitch",
+    header:"A professional soccer player rising above defenders to head the ball, perfect elevation, stadium",
+    freekick:"A professional soccer player striking a free kick with precision and power, wall of defenders, stadium"
+  },
+  Tennis:{
+    serve:"A professional tennis player in mid-serve, racket fully extended overhead, ball just struck, hard court, arena crowd",
+    backhand:"A professional tennis player unleashing a powerful two-handed backhand, full rotation, clay court",
+    volley:"A professional tennis player at the net, punching a crisp volley, athletic reach, arena",
+    win:"A professional tennis player celebrating match point, falling to knees in joy, arms wide, grand slam arena"
+  },
+  Golf:{
+    drive:"A professional PGA golfer completing a powerful tee shot, perfect swing follow-through, golf course fairway, blue sky",
+    putt:"A professional PGA golfer in focused putting stance, reading the green, late afternoon light, golf course",
+    approach:"A professional PGA golfer hitting a crisp iron approach shot, divot, ball in flight, lush fairway",
+    celebrate:"A professional PGA golfer celebrating a hole-in-one, fist pump, crowd cheering on the green, golf course"
+  },
+  Boxing:{
+    punch:"A professional boxer throwing a devastating straight right hand, full extension, sweat flying, boxing ring lights",
+    combo:"A professional boxer throwing a sharp combination, blurred fists, determined expression, boxing ring",
+    victory:"A professional boxer celebrating a victory, arms raised by the referee, arena crowd cheering, championship belt",
+    slip:"A professional boxer slipping a punch with defensive brilliance, counter-punching, boxing ring, crowd"
+  }
+};
+
+let imgData=null, selSport='Football', selStyle='topps', selScene='throw', busy=false;
+
+/* ── STYLE TABS ── */
+document.querySelectorAll('.stab').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.stab').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); selStyle=b.dataset.style;
+  if(document.getElementById('stResult').style.display==='flex') showCard();
+}));
+
+/* ── SPORT ── */
+document.querySelectorAll('.sp').forEach(s=>s.addEventListener('click',()=>{
+  document.querySelectorAll('.sp').forEach(x=>x.classList.remove('on'));
+  s.classList.add('on'); selSport=s.dataset.sport; buildScenes();
+}));
+
+function buildScenes(){
+  const g=document.getElementById('sceneGrid');
+  const sc=SCENES[selSport]||SCENES.Football;
+  selScene=sc[0].id;
+  g.innerHTML=sc.map((s,i)=>`<button class="scb${i===0?' on':''}" data-scene="${s.id}"><span class="sc-ic">${s.ic}</span><span class="sc-nm">${s.nm}</span></button>`).join('');
+  g.querySelectorAll('.scb').forEach(b=>b.addEventListener('click',()=>{
+    g.querySelectorAll('.scb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); selScene=b.dataset.scene;
+  }));
+}
+buildScenes();
+
+/* ── UPLOAD ── */
+const dz=document.getElementById('dz'),fileIn=document.getElementById('fileIn'),
+      pvw=document.getElementById('pvw'),pvwImg=document.getElementById('pvwImg');
+fileIn.addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0]);});
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
+document.getElementById('btnChg').addEventListener('click',resetUpload);
+function resetUpload(){pvw.style.display='none';dz.style.display='block';imgData=null;document.getElementById('btnGen').disabled=true;fileIn.value='';}
+function loadFile(f){
+  if(f.size>10*1024*1024){alert('Max 10MB');return;}
+  const r=new FileReader();
+  r.onload=e=>{imgData=e.target.result;pvwImg.src=imgData;dz.style.display='none';pvw.style.display='block';document.getElementById('btnGen').disabled=false;};
+  r.readAsDataURL(f);
+}
+
+/* ── GENERATE ── */
+document.getElementById('btnGen').addEventListener('click',generate);
+document.getElementById('btnRegen').addEventListener('click',generate);
+document.getElementById('btnCycle').addEventListener('click',()=>{
+  const s=['topps','bowman','panini']; const ni=(s.indexOf(selStyle)+1)%3; selStyle=s[ni];
+  document.querySelectorAll('.stab').forEach(b=>b.classList.toggle('on',b.dataset.style===selStyle));
+  if(document.getElementById('stResult').style.display==='flex') showCard();
+});
+document.getElementById('btnDl').addEventListener('click',()=>{
+  alert('To save:\n• Right-click the card → "Save image as…"\n• Or take a screenshot\n• Print-quality export coming soon!');
+});
+
+function generateSceneBg(sport, scene, c1, c2){
+  const W=512, H=720;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const cx=cv.getContext('2d');
+  const R=Math.random;
+
+  // Stadium crowd/atmosphere backdrop (shared base for all sports)
+  function drawStadium(fieldColor, skyColor){
+    // Dark sky/ceiling
+    const sky=cx.createLinearGradient(0,0,0,H*0.4);
+    sky.addColorStop(0, skyColor||'#0a0a18'); sky.addColorStop(1,'#141420');
+    cx.fillStyle=sky; cx.fillRect(0,0,W,H*0.4);
+    // Crowd (rows of dots)
+    for(let row=0;row<12;row++){
+      const y=H*0.05+row*22;
+      for(let x=0;x<W;x+=6+R()*4){
+        cx.fillStyle=`hsla(${R()*360},${30+R()*40}%,${25+R()*35}%,${0.3+R()*0.4})`;
+        cx.fillRect(x,y+R()*6,3+R()*3,4+R()*4);
+      }
+    }
+    // Field
+    const field=cx.createLinearGradient(0,H*0.35,0,H);
+    field.addColorStop(0, fieldColor); field.addColorStop(1, fieldColor);
+    cx.fillStyle=field; cx.fillRect(0,H*0.35,W,H*0.65);
+  }
+
+  // Stadium lights (bright flares)
+  function drawLights(){
+    for(let i=0;i<6;i++){
+      const lx=W*(0.08+i*0.18), ly=H*0.02;
+      const flare=cx.createRadialGradient(lx,ly,2,lx,ly,80+R()*60);
+      flare.addColorStop(0,'rgba(255,250,230,0.35)');
+      flare.addColorStop(0.3,'rgba(255,240,200,0.08)');
+      flare.addColorStop(1,'rgba(0,0,0,0)');
+      cx.fillStyle=flare; cx.fillRect(lx-150,ly-20,300,200);
+    }
+  }
+
+  if(sport==='Football'){
+    drawStadium('#2a6e2a','#0c1020');
+    // Yard lines
+    cx.strokeStyle='rgba(255,255,255,0.18)'; cx.lineWidth=1.5;
+    for(let y=H*0.38;y<H;y+=36){cx.beginPath();cx.moveTo(W*0.05,y);cx.lineTo(W*0.95,y);cx.stroke();}
+    // Hash marks
+    cx.strokeStyle='rgba(255,255,255,0.1)';
+    for(let y=H*0.38;y<H;y+=36){for(let x of[W*0.35,W*0.65]){cx.beginPath();cx.moveTo(x,y-5);cx.lineTo(x,y+5);cx.stroke();}}
+    drawLights();
+  } else if(sport==='Baseball'){
+    drawStadium('#2a6e2a','#0c1828');
+    // Infield dirt
+    cx.fillStyle='#8a6930';
+    cx.beginPath();cx.moveTo(W*0.5,H*0.5);cx.lineTo(W*0.15,H);cx.lineTo(W*0.85,H);cx.closePath();cx.fill();
+    cx.fillStyle='#2a6e2a';cx.beginPath();cx.arc(W*0.5,H*0.72,55,0,Math.PI*2);cx.fill();
+    // Bases
+    cx.fillStyle='rgba(255,255,255,0.6)';
+    [[0.5,0.88],[0.3,0.7],[0.7,0.7],[0.5,0.54]].forEach(([bx,by])=>{cx.save();cx.translate(W*bx,H*by);cx.rotate(Math.PI/4);cx.fillRect(-5,-5,10,10);cx.restore();});
+    drawLights();
+  } else if(sport==='Basketball'){
+    drawStadium('#9a6832','#0c0c1a');
+    // Hardwood planks
+    for(let i=0;i<W;i+=18){cx.fillStyle=i%36===0?'rgba(0,0,0,0.04)':'rgba(255,255,255,0.02)';cx.fillRect(i,H*0.35,9,H*0.65);}
+    // Court lines
+    cx.strokeStyle='rgba(255,255,255,0.22)'; cx.lineWidth=2;
+    cx.beginPath();cx.arc(W*0.5,H*0.65,70,0,Math.PI*2);cx.stroke();
+    cx.strokeRect(W*0.1,H*0.38,W*0.8,H*0.58);
+    // Three-point arcs
+    cx.beginPath();cx.arc(W*0.5,H*0.38,W*0.38,0.15*Math.PI,0.85*Math.PI);cx.stroke();
+    drawLights();
+  } else if(sport==='Hockey'){
+    drawStadium('#c8dae8','#0c1020');
+    // Ice surface texture
+    cx.fillStyle='rgba(200,220,240,0.08)';for(let i=0;i<200;i++){cx.fillRect(R()*W,H*0.35+R()*H*0.65,R()*40,1);}
+    // Red & blue lines
+    cx.strokeStyle='rgba(200,20,20,0.4)'; cx.lineWidth=4;
+    cx.beginPath();cx.moveTo(0,H*0.5);cx.lineTo(W,H*0.5);cx.stroke();
+    cx.strokeStyle='rgba(20,20,200,0.35)'; cx.lineWidth=3;
+    cx.beginPath();cx.moveTo(0,H*0.6);cx.lineTo(W,H*0.6);cx.moveTo(0,H*0.78);cx.lineTo(W,H*0.78);cx.stroke();
+    // Center circle
+    cx.strokeStyle='rgba(200,20,20,0.3)'; cx.beginPath();cx.arc(W*0.5,H*0.5,55,0,Math.PI*2);cx.stroke();
+    drawLights();
+  } else if(sport==='Soccer'){
+    drawStadium('#1e6e2e','#0a1422');
+    // Mow stripes
+    for(let y=H*0.35;y<H;y+=40){cx.fillStyle=y%80<40?'rgba(255,255,255,0.03)':'rgba(0,0,0,0.03)';cx.fillRect(0,y,W,20);}
+    // Pitch lines
+    cx.strokeStyle='rgba(255,255,255,0.2)'; cx.lineWidth=2;
+    cx.beginPath();cx.moveTo(0,H*0.65);cx.lineTo(W,H*0.65);cx.stroke();
+    cx.beginPath();cx.arc(W*0.5,H*0.65,60,0,Math.PI*2);cx.stroke();
+    // Penalty box
+    cx.strokeRect(W*0.2,H*0.35,W*0.6,H*0.18);
+    drawLights();
+  } else if(sport==='Tennis'){
+    drawStadium(R()>0.5?'#2266aa':'#3a7a3a','#0c1828');
+    cx.strokeStyle='rgba(255,255,255,0.35)'; cx.lineWidth=2;
+    cx.strokeRect(W*0.08,H*0.38,W*0.84,H*0.58);
+    cx.beginPath();cx.moveTo(W*0.08,H*0.67);cx.lineTo(W*0.92,H*0.67);cx.stroke();
+    cx.beginPath();cx.moveTo(W*0.5,H*0.38);cx.lineTo(W*0.5,H*0.96);cx.stroke();
+    // Net
+    cx.strokeStyle='rgba(255,255,255,0.15)'; cx.lineWidth=1;
+    for(let x=W*0.08;x<W*0.92;x+=8){cx.beginPath();cx.moveTo(x,H*0.665);cx.lineTo(x,H*0.675);cx.stroke();}
+    drawLights();
+  } else if(sport==='Golf'){
+    // Sky
+    const sky=cx.createLinearGradient(0,0,0,H*0.45);
+    sky.addColorStop(0,'#3388cc'); sky.addColorStop(1,'#88bbdd');
+    cx.fillStyle=sky; cx.fillRect(0,0,W,H*0.45);
+    // Clouds
+    cx.fillStyle='rgba(255,255,255,0.25)';
+    for(let i=0;i<4;i++){cx.beginPath();cx.ellipse(W*(0.15+R()*0.7),H*(0.06+R()*0.2),50+R()*80,12+R()*15,0,0,Math.PI*2);cx.fill();}
+    // Rolling fairway
+    const fair=cx.createLinearGradient(0,H*0.4,0,H);
+    fair.addColorStop(0,'#4a9a4a'); fair.addColorStop(0.5,'#3a8a3a'); fair.addColorStop(1,'#2a6a2a');
+    cx.fillStyle=fair; cx.fillRect(0,H*0.4,W,H*0.6);
+    // Bunker
+    cx.fillStyle='#d4c090'; cx.beginPath(); cx.ellipse(W*0.7,H*0.8,35,18,0.2,0,Math.PI*2); cx.fill();
+    // Flag
+    cx.strokeStyle='#aaa'; cx.lineWidth=2; cx.beginPath();cx.moveTo(W*0.45,H*0.55);cx.lineTo(W*0.45,H*0.7);cx.stroke();
+    cx.fillStyle='#cc2222'; cx.beginPath();cx.moveTo(W*0.45,H*0.55);cx.lineTo(W*0.5,H*0.575);cx.lineTo(W*0.45,H*0.6);cx.fill();
+  } else if(sport==='Boxing'){
+    cx.fillStyle='#08080e'; cx.fillRect(0,0,W,H);
+    // Arena crowd (dim)
+    for(let row=0;row<8;row++){const y=H*0.02+row*18;for(let x=0;x<W;x+=5+R()*3){cx.fillStyle=`rgba(${60+R()*80},${40+R()*60},${30+R()*50},${0.15+R()*0.2})`;cx.fillRect(x,y,3,4);}}
+    // Ring floor
+    cx.fillStyle='#1a1a2a'; cx.fillRect(0,H*0.4,W,H*0.6);
+    cx.fillStyle='rgba(200,180,150,0.08)'; cx.fillRect(0,H*0.4,W,H*0.6);
+    // Ring ropes
+    cx.strokeStyle='rgba(220,40,40,0.55)'; cx.lineWidth=3;
+    for(let i=0;i<3;i++){const y=H*(0.32+i*0.06);cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();}
+    // Spotlight
+    const spot=cx.createRadialGradient(W*0.5,H*0.1,5,W*0.5,H*0.4,W*0.5);
+    spot.addColorStop(0,'rgba(255,240,200,0.25)'); spot.addColorStop(0.5,'rgba(255,230,180,0.06)'); spot.addColorStop(1,'rgba(0,0,0,0)');
+    cx.fillStyle=spot; cx.fillRect(0,0,W,H);
+  }
+
+  // Dramatic vignette (stronger at bottom where scene shows through)
+  const vig=cx.createRadialGradient(W*0.5,H*0.35,W*0.2,W*0.5,H*0.5,W*0.85);
+  vig.addColorStop(0,'rgba(0,0,0,0)'); vig.addColorStop(1,'rgba(0,0,0,0.5)');
+  cx.fillStyle=vig; cx.fillRect(0,0,W,H);
+
+  // Team color tint
+  if(c1){ cx.fillStyle=c1; cx.globalAlpha=0.1; cx.fillRect(0,0,W,H); cx.globalAlpha=1; }
+  if(c2){ cx.fillStyle=c2; cx.globalAlpha=0.06; cx.fillRect(0,H*0.5,W,H*0.5); cx.globalAlpha=1; }
+
+  return cv.toDataURL('image/jpeg',0.9);
+}
+
+async function generate(){
+  if(!imgData||busy)return; busy=true;
+  document.getElementById('btnGen').disabled=true;
+  setUI('loading');
+
+  const name=document.getElementById('iName').value.trim()||'Star Player';
+  const jersey=document.getElementById('iJersey').value.trim()||'00';
+  const pos=document.getElementById('iPos').value.trim()||DEFPOS[selSport];
+  const team=document.getElementById('iTeam').value.trim()||'Home Team';
+  const edition=document.getElementById('iEd').value;
+
+  stepSet(1,'active');
+
+  try{
+    const cd=mkFallback(name,jersey,pos,team);
+    stepSet(1,'done'); stepSet(2,'active');
+
+    const sceneUrl=generateSceneBg(selSport, selScene, cd.teamColor1, cd.teamColor2);
+
+    await sleep(400);
+    stepSet(2,'done'); stepSet(3,'active');
+    await sleep(300);
+    stepSet(3,'done'); stepSet(4,'active');
+    await sleep(300);
+    stepSet(4,'done');
+    await sleep(200);
+
+    populate(cd, jersey, edition, sceneUrl, imgData);
+    setUI('result');
+
+  }catch(e){
+    console.error(e);
+    const cd=mkFallback(name,jersey,pos,team);
+    populate(cd,jersey,edition,imgData,imgData);
+    setUI('result');
+  }finally{
+    busy=false;
+    document.getElementById('btnGen').disabled=false;
+  }
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function mkFallback(name,jersey,pos,team){
+  const sk=STATS[selSport];
+  const pal=[['#003087','#FFB612'],['#00285C','#BE0000'],['#1D1160','#E56020'],['#041E42','#4FA3E0'],['#005C5C','#FCB514'],['#002D62','#D50032'],['#006341','#CED4DA'],['#97233F','#FFB612']][Math.floor(Math.random()*8)];
+  return{
+    name:(name||'STAR PLAYER').toUpperCase().slice(0,20),
+    position:(pos||DEFPOS[selSport]).toUpperCase(),
+    team:(team||'HOME TEAM').toUpperCase().slice(0,16),
+    stats:[{label:sk[0],value:selSport==='Baseball'?'.'+String(280+Math.floor(Math.random()*60)):String(65+Math.floor(Math.random()*33))},{label:sk[1],value:String(8+Math.floor(Math.random()*38))},{label:sk[2],value:String(22+Math.floor(Math.random()*75))}],
+    teamColor1:pal[0],teamColor2:pal[1],
+    cardSerial:String(Math.floor(Math.random()*899)+100)+'/999',
+    scouting:'A dynamic athlete with elite physical tools and the competitive fire to match any opponent on any stage.',
+    subjectDescription:''
+  };
+}
+
+function populate(d,jersey,edition,sceneUrl,selfieData){
+  const lg=LEAGUES[selSport]||selSport.toUpperCase();
+  const n=(d.name||'PLAYER').toUpperCase().slice(0,20);
+  const p=(d.position||DEFPOS[selSport]).toUpperCase();
+  const t=(d.team||'TEAM').toUpperCase().slice(0,16);
+  const c1=d.teamColor1||'#003087', c2=d.teamColor2||'#FFB612';
+  const num=d.cardSerial||'001/999';
+  const ed=edition||'ROOKIE CARD';
+  const hasScene=sceneUrl!==selfieData;
+
+  ['tScene','bScene','pScene'].forEach(id=>{document.getElementById(id).src=sceneUrl;});
+  ['tSelfie','bSelfie','pSelfie'].forEach(id=>{
+    document.getElementById(id).src=selfieData;
+    document.getElementById(id).style.display=hasScene?'':'none';
+  });
+
+  // TOPPS text
+  document.getElementById('tEd').textContent=ed;
+  document.getElementById('tName').textContent=n;
+  document.getElementById('tPos').textContent=p;
+  document.getElementById('tTeam').textContent=t;
+  document.getElementById('tTeam').style.color=c1;
+  document.getElementById('tLg').textContent=lg;
+  document.getElementById('tLg').style.color=c1;
+  document.getElementById('tNum').textContent='#'+num;
+  document.getElementById('tTopbar').style.background=`linear-gradient(90deg,${c1} 55%,${c2} 100%)`;
+  document.getElementById('tCbar').style.background=`linear-gradient(90deg,${c1},${c2})`;
+  document.getElementById('tStats').innerHTML=(d.stats||[]).slice(0,3).map(s=>`<div class="t-stat"><span class="t-sv">${s.value}</span><span class="t-sk">${s.label}</span></div>`).join('');
+
+  // BOWMAN text
+  document.getElementById('bEd').textContent=ed;
+  document.getElementById('bName').textContent=n;
+  document.getElementById('bPos').textContent=p;
+  document.getElementById('bTeam').textContent=t;
+  document.getElementById('bNum').textContent='#'+num;
+  document.getElementById('bLg').textContent=lg;
+  document.getElementById('bStats').innerHTML=(d.stats||[]).slice(0,3).map(s=>`<div class="b-stat"><span class="b-sv">${s.value}</span><span class="b-sk">${s.label}</span></div>`).join('');
+
+  // PANINI text
+  document.getElementById('pEd').textContent=ed;
+  document.getElementById('pLg').textContent=lg;
+  document.getElementById('pName').textContent=n;
+  document.getElementById('pPos').textContent=p;
+  document.getElementById('pTeam').textContent=t;
+  document.getElementById('pNum').textContent='#'+num.split('/')[0];
+  document.getElementById('pSerial').textContent=num.split('/')[0]+'/'+(num.split('/')[1]||'199');
+  document.getElementById('pStats').innerHTML=(d.stats||[]).slice(0,3).map(s=>`<div class="p-stat"><span class="p-sv">${s.value}</span><span class="p-sk">${s.label}</span></div>`).join('');
+
+  document.getElementById('scoutNote').textContent=d.scouting||'';
+  showCard();
+}
+
+function stepSet(n,state){
+  const el=document.getElementById('sr'+n);
+  el.classList.remove('active','done');
+  el.classList.add(state);
+}
+
+function showCard(){
+  ['cTopps','cBowman','cPanini'].forEach(id=>document.getElementById(id).style.display='none');
+  const m={topps:'cTopps',bowman:'cBowman',panini:'cPanini'};
+  const el=document.getElementById(m[selStyle]);
+  el.style.display='block';
+  el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
+}
+
+function setUI(s){
+  document.getElementById('stEmpty').style.display=s==='empty'?'flex':'none';
+  document.getElementById('stLoad').style.display=s==='loading'?'flex':'none';
+  document.getElementById('stResult').style.display=s==='result'?'flex':'none';
+}
+
+setUI('empty');
+</script>
+</body>
+</html>
