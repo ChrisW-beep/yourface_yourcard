@@ -108,6 +108,17 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .fi input,.fi select{background:rgba(255,255,255,0.04);border:1px solid var(--bdr);border-radius:2px;padding:8px 9px;color:var(--txt);font-family:'Barlow',sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.18s;-webkit-appearance:none;}
 .fi input:focus,.fi select:focus{border-color:var(--gold);}
 .fi select option{background:var(--bg2);}
+.stats-toggle{display:flex;align-items:center;}
+.toggle-label{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+.toggle-label input{display:none;}
+.toggle-track{position:relative;width:36px;height:20px;background:rgba(255,255,255,0.1);border-radius:10px;transition:background 0.2s;flex-shrink:0;}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#888;border-radius:50%;transition:transform 0.2s,background 0.2s;}
+.toggle-label input:checked~.toggle-track{background:var(--gold);}
+.toggle-label input:checked~.toggle-track .toggle-thumb{transform:translateX(16px);background:#fff;}
+.toggle-text{font-family:'Oswald',sans-serif;font-size:0.58rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);}
+.custom-stats-area{margin-top:8px;padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--bdr);border-radius:4px;}
+.custom-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.stats-hint{display:block;margin-top:6px;font-size:0.65rem;color:var(--muted);opacity:0.6;}
 
 .gw{padding:0 13px 13px;}
 .btn-gen{width:100%;background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);color:#000;border:none;border-radius:3px;padding:13px;font-family:'Oswald',sans-serif;font-size:0.92rem;font-weight:600;letter-spacing:4px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
@@ -348,6 +359,23 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
               <option value="1ST EDITION">🥇 1st Edition</option>
             </select>
           </div>
+          <div class="fi full" style="margin-top:4px">
+            <div class="stats-toggle">
+              <label class="toggle-label">
+                <input type="checkbox" id="customStatsToggle">
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span class="toggle-text">Enter my own stats</span>
+              </label>
+            </div>
+            <div class="custom-stats-area" id="customStatsArea" style="display:none">
+              <div class="custom-stats-grid">
+                <div class="fi"><label id="csLabel1">STAT 1</label><input id="csStat1" type="text" placeholder="auto" maxlength="10"></div>
+                <div class="fi"><label id="csLabel2">STAT 2</label><input id="csStat2" type="text" placeholder="auto" maxlength="10"></div>
+                <div class="fi"><label id="csLabel3">STAT 3</label><input id="csStat3" type="text" placeholder="auto" maxlength="10"></div>
+              </div>
+              <span class="stats-hint">Leave blank for AI-generated values</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="gw"><button class="btn-gen" id="btnGen" disabled>⚡ FORGE MY CARD</button></div>
@@ -540,7 +568,7 @@ document.querySelectorAll('.stab').forEach(b=>b.addEventListener('click',()=>{
 /* ── SPORT ── */
 document.querySelectorAll('.sp').forEach(s=>s.addEventListener('click',()=>{
   document.querySelectorAll('.sp').forEach(x=>x.classList.remove('on'));
-  s.classList.add('on'); selSport=s.dataset.sport; buildScenes();
+  s.classList.add('on'); selSport=s.dataset.sport; buildScenes(); updateStatLabels();
 }));
 
 function buildScenes(){
@@ -550,10 +578,28 @@ function buildScenes(){
   g.innerHTML=sc.map((s,i)=>`<button class="scb${i===0?' on':''}" data-scene="${s.id}"><span class="sc-ic">${s.ic}</span><span class="sc-nm">${s.nm}</span></button>`).join('');
   g.querySelectorAll('.scb').forEach(b=>b.addEventListener('click',()=>{
     g.querySelectorAll('.scb').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on'); selScene=b.dataset.scene;
+    b.classList.add('on'); selScene=b.dataset.scene; updateStatLabels();
   }));
 }
 buildScenes();
+
+/* ── CUSTOM STATS TOGGLE ── */
+const csToggle=document.getElementById('customStatsToggle');
+const csArea=document.getElementById('customStatsArea');
+csToggle.addEventListener('change',()=>{
+  csArea.style.display=csToggle.checked?'block':'none';
+});
+
+function updateStatLabels(){
+  const sk=(STATS[selSport]&&STATS[selSport][selScene])||STATS.Football.throw;
+  document.getElementById('csLabel1').textContent=sk[0];
+  document.getElementById('csLabel2').textContent=sk[1];
+  document.getElementById('csLabel3').textContent=sk[2];
+  document.getElementById('csStat1').placeholder=sk[0]+' value';
+  document.getElementById('csStat2').placeholder=sk[1]+' value';
+  document.getElementById('csStat3').placeholder=sk[2]+' value';
+}
+updateStatLabels();
 
 /* ── UPLOAD ── */
 const dz=document.getElementById('dz'),fileIn=document.getElementById('fileIn'),
@@ -840,9 +886,25 @@ async function generate(){
   stepSet(1,'active');
   setStatus('generating','Getting AI stats…');
 
+  const customOn=document.getElementById('customStatsToggle').checked;
+  const cv1=document.getElementById('csStat1').value.trim();
+  const cv2=document.getElementById('csStat2').value.trim();
+  const cv3=document.getElementById('csStat3').value.trim();
+
   try{
-    const aiStats=await fetchAIStats(selSport,pos,selScene,name,team);
-    const cd=aiStats||mkFallback(name,jersey,pos,team);
+    let cd;
+    if(customOn&&(cv1||cv2||cv3)){
+      cd=mkFallback(name,jersey,pos,team);
+      const sk=(STATS[selSport]&&STATS[selSport][selScene])||STATS.Football.throw;
+      cd.stats=[
+        {label:sk[0],value:cv1||mkStatVal(sk[0])},
+        {label:sk[1],value:cv2||mkStatVal(sk[1])},
+        {label:sk[2],value:cv3||mkStatVal(sk[2])}
+      ];
+    } else {
+      const aiStats=await fetchAIStats(selSport,pos,selScene,name,team);
+      cd=aiStats||mkFallback(name,jersey,pos,team);
+    }
 
     stepSet(1,'done'); stepSet(2,'active');
     setStatus('generating','Building card…');
@@ -867,6 +929,10 @@ async function generate(){
   }catch(e){
     console.error('Generation error:',e);
     const cd=mkFallback(name,jersey,pos,team);
+    if(customOn&&(cv1||cv2||cv3)){
+      const sk=(STATS[selSport]&&STATS[selSport][selScene])||STATS.Football.throw;
+      cd.stats=[{label:sk[0],value:cv1||mkStatVal(sk[0])},{label:sk[1],value:cv2||mkStatVal(sk[1])},{label:sk[2],value:cv3||mkStatVal(sk[2])}];
+    }
     const fallbackScene=generateSceneBg(selSport,selScene,cd.teamColor1,cd.teamColor2);
     populate(cd,jersey,edition,fallbackScene,imgData);
     setUI('result');
