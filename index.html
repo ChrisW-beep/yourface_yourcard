@@ -158,6 +158,8 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .t-topbar{position:absolute;top:0;left:0;right:0;height:7px;z-index:20;}
 .t-photo{position:absolute;top:7px;left:0;right:0;height:263px;overflow:hidden;z-index:6;}
 .t-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+.card-scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:1;}
+.card-selfie{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:2;-webkit-mask-image:radial-gradient(ellipse 64% 72% at 50% 40%,black 35%,rgba(0,0,0,0.85) 52%,rgba(0,0,0,0.3) 68%,transparent 85%);mask-image:radial-gradient(ellipse 64% 72% at 50% 40%,black 35%,rgba(0,0,0,0.85) 52%,rgba(0,0,0,0.3) 68%,transparent 85%);}
 .t-pfade{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,rgba(242,237,226,0.88) 70%,rgba(242,237,226,1) 100%);z-index:7;}
 .t-yr-badge{position:absolute;top:13px;left:9px;z-index:25;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);border-radius:2px;padding:2px 6px;}
 .t-yr{font-family:'Oswald',sans-serif;font-size:0.62rem;font-weight:700;color:#fff;letter-spacing:0.5px;display:block;line-height:1.15;}
@@ -377,7 +379,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
       <div class="card topps" id="cTopps" style="display:none">
         <div class="t-stock"></div><div class="t-refract"></div><div class="t-foil"></div>
         <div class="t-topbar" id="tTopbar"></div>
-        <div class="t-photo"><img id="tImg" src="" alt=""><div class="t-pfade"></div></div>
+        <div class="t-photo"><img class="card-scene" id="tScene" src="" alt=""><img class="card-selfie" id="tSelfie" src="" alt=""><div class="t-pfade"></div></div>
         <div class="t-yr-badge"><span class="t-yr">2026</span><span class="t-set">TOPPS CHROME</span></div>
         <div class="t-flag" id="tEd">ROOKIE CARD</div>
         <div class="t-body">
@@ -393,7 +395,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
       <!-- BOWMAN -->
       <div class="card bowman" id="cBowman" style="display:none">
         <div class="b-bg"></div><div class="b-tex"></div><div class="b-foil"></div>
-        <div class="b-photo"><img id="bImg" src="" alt=""><div class="b-vig"></div><div class="b-fade"></div></div>
+        <div class="b-photo"><img class="card-scene" id="bScene" src="" alt=""><img class="card-selfie" id="bSelfie" src="" alt=""><div class="b-vig"></div><div class="b-fade"></div></div>
         <div class="b-tbadge"><span class="b-tby">2026</span><span class="b-tbs">BOWMAN CHROME</span></div>
         <div class="b-tbr" id="bEd">PROSPECT</div>
         <div class="b-body">
@@ -409,7 +411,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
       <!-- PANINI -->
       <div class="card panini" id="cPanini" style="display:none">
         <div class="p-bg"></div><div class="p-lines"></div><div class="p-prism"></div>
-        <div class="p-photo"><img id="pImg" src="" alt=""><div class="p-vig"></div><div class="p-fade"></div></div>
+        <div class="p-photo"><img class="card-scene" id="pScene" src="" alt=""><img class="card-selfie" id="pSelfie" src="" alt=""><div class="p-vig"></div><div class="p-fade"></div></div>
         <div class="p-edge"></div><div class="p-sl"></div><div class="p-sr"></div>
         <div class="p-tl"><span class="p-tl-lg" id="pLg">NBA</span><span class="p-tl-yr">2026 PRIZM</span></div>
         <div class="p-tr"><span class="p-trt" id="pEd">PRIZM</span></div>
@@ -675,46 +677,37 @@ function generateSceneBg(sport, scene, c1, c2){
   return cv.toDataURL('image/jpeg',0.9);
 }
 
-/* ── AI SCENE GENERATION (Pollinations.ai) ── */
-function fetchAIScene(sport, scene){
+/* ── AI SCENE URL BUILDER ── */
+function getAISceneUrl(sport, scene){
   const prompt=(SCENE_PROMPTS[sport]&&SCENE_PROMPTS[sport][scene])||
-    'Professional '+sport+' action, '+scene+', stadium lighting, dramatic sports photography';
-  const bgPrompt=prompt+', wide angle stadium background environment, dramatic stadium lighting, depth of field, cinematic sports photography, no people no faces, background only';
-  const seed=Math.floor(Date.now()/1000)%999983;
-  const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(bgPrompt)+'?width=768&height=1024&nologo=true&seed='+seed+'&enhance=false';
+    'Professional '+sport+' sports action, stadium, dramatic lighting';
+  const bgPrompt=prompt+', wide angle stadium environment, cinematic lighting, no people, no faces, background only, photorealistic';
+  const seed=Math.floor(Math.random()*9999999);
+  return 'https://image.pollinations.ai/prompt/'+encodeURIComponent(bgPrompt)+'?width=600&height=840&nologo=true&seed='+seed;
+}
 
-  return new Promise((resolve)=>{
-    const img=new Image();
-    img.crossOrigin='anonymous';
+/* ── LOAD AI SCENE INTO CARDS IN BACKGROUND ── */
+function loadAIScene(sport, scene){
+  const url=getAISceneUrl(sport,scene);
+  const sceneIds=['tScene','bScene','pScene'];
 
-    const timer=setTimeout(()=>{
-      img.src='';
-      console.warn('AI scene timed out after 50s, using canvas fallback');
-      resolve(null);
-    },50000);
+  const img=new Image();
+  img.onload=()=>{
+    console.log('AI scene loaded from Pollinations');
+    sceneIds.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.src=url;
+    });
+    setStatus('ok','AI scene loaded');
+  };
+  img.onerror=()=>{
+    console.warn('Pollinations scene failed to load — keeping canvas fallback');
+    setStatus('ok','AI Ready');
+  };
+  img.src=url;
 
-    img.onload=()=>{
-      clearTimeout(timer);
-      try{
-        const cv=document.createElement('canvas');
-        cv.width=img.naturalWidth||768; cv.height=img.naturalHeight||1024;
-        const cx=cv.getContext('2d');
-        cx.drawImage(img,0,0);
-        resolve(cv.toDataURL('image/jpeg',0.92));
-      }catch(e){
-        console.warn('Canvas taint on scene image:',e.message);
-        resolve(null);
-      }
-    };
-
-    img.onerror=(e)=>{
-      clearTimeout(timer);
-      console.warn('AI scene image failed to load, using canvas fallback');
-      resolve(null);
-    };
-
-    img.src=url;
-  });
+  // Timeout after 60s — just give up silently
+  setTimeout(()=>{ img.src=''; },60000);
 }
 
 /* ── AI STATS GENERATION (Pollinations.ai) ── */
@@ -763,77 +756,41 @@ async function fetchAIStats(sport, pos, scene, name, team){
   }
 }
 
-/* ── CANVAS IMAGE COMPOSITING ── */
-function drawCover(ctx,img,W,H,align){
-  const iA=img.naturalWidth/img.naturalHeight, cA=W/H;
-  let sx,sy,sw,sh;
-  if(iA>cA){sh=img.naturalHeight;sw=sh*cA;sx=(img.naturalWidth-sw)/2;sy=0;}
-  else{sw=img.naturalWidth;sh=sw/cA;sx=0;sy=align==='top'?0:(img.naturalHeight-sh)/2;}
-  ctx.drawImage(img,sx,sy,sw,sh,0,0,W,H);
-}
-
-function compositeImages(selfieDataUrl,sceneDataUrl){
-  return new Promise((resolve,reject)=>{
-    const W=590,H=826;
-    const cv=document.createElement('canvas');cv.width=W;cv.height=H;
-    const cx=cv.getContext('2d');
-    const imgs={};
-    let loaded=0;
-
-    function done(){
-      if(++loaded<2) return;
-      drawCover(cx,imgs.scene,W,H,'center');
-
-      const tmp=document.createElement('canvas');tmp.width=W;tmp.height=H;
-      const tc=tmp.getContext('2d');
-      drawCover(tc,imgs.selfie,W,H,'top');
-
-      tc.globalCompositeOperation='destination-in';
-      const g=tc.createRadialGradient(W/2,H*0.36,W*0.06,W/2,H*0.4,W*0.58);
-      g.addColorStop(0,'rgba(0,0,0,1)');
-      g.addColorStop(0.5,'rgba(0,0,0,0.97)');
-      g.addColorStop(0.78,'rgba(0,0,0,0.45)');
-      g.addColorStop(1,'rgba(0,0,0,0)');
-      tc.fillStyle=g;
-      tc.fillRect(0,0,W,H);
-
-      cx.drawImage(tmp,0,0);
-
-      cx.globalCompositeOperation='soft-light';
-      cx.fillStyle='rgba(255,220,150,0.06)';
-      cx.fillRect(0,0,W,H);
-      cx.globalCompositeOperation='source-over';
-
-      resolve(cv.toDataURL('image/jpeg',0.92));
-    }
-
-    function load(key,src){
-      const img=new Image();
-      img.crossOrigin='anonymous';
-      img.onload=()=>{imgs[key]=img;done();};
-      img.onerror=()=>reject(new Error('Failed to load '+key));
-      img.src=src;
-    }
-
-    load('scene',sceneDataUrl);
-    load('selfie',selfieDataUrl);
-  });
-}
 
 /* ── CARD DOWNLOAD ── */
 async function downloadCard(){
   const cardId={topps:'cTopps',bowman:'cBowman',panini:'cPanini'}[selStyle];
   const card=document.getElementById(cardId);
   const btn=document.getElementById('btnDl');
+
+  // If AI scene is still loading, wait up to 30s for it
+  const sceneId={topps:'tScene',bowman:'bScene',panini:'pScene'}[selStyle];
+  const sceneEl=document.getElementById(sceneId);
+  if(sceneEl&&sceneEl.src&&!sceneEl.complete){
+    btn.textContent='Waiting for scene…';
+    await new Promise(res=>{
+      const t=setTimeout(res,30000);
+      sceneEl.addEventListener('load',()=>{clearTimeout(t);res();},{once:true});
+      sceneEl.addEventListener('error',()=>{clearTimeout(t);res();},{once:true});
+    });
+  }
+
   btn.textContent='Exporting...';
   btn.disabled=true;
   try{
     const canvas=await html2canvas(card,{
-      scale:3,
+      scale:2,
       backgroundColor:null,
       useCORS:true,
-      allowTaint:true,
-      logging:false
+      allowTaint:false,
+      logging:false,
+      onclone:(clonedDoc)=>{
+        const el=clonedDoc.getElementById(cardId);
+        el.style.transform='none';
+        el.style.transition='none';
+        el.style.animation='none';
+        el.style.boxShadow='none';
+      }
     });
     const link=document.createElement('a');
     link.download='cardforge-'+selStyle+'-'+Date.now()+'.png';
@@ -861,36 +818,37 @@ async function generate(){
   const edition=document.getElementById('iEd').value;
 
   stepSet(1,'active');
-  setStatus('generating','Generating AI scene…');
+  setStatus('generating','Getting AI stats…');
 
   try{
-    // Stats and scene run in parallel; scene can take up to 50s
-    const [aiStats, aiSceneUrl]=await Promise.all([
-      fetchAIStats(selSport,pos,selScene,name,team),
-      fetchAIScene(selSport,selScene)
-    ]);
-
+    const aiStats=await fetchAIStats(selSport,pos,selScene,name,team);
     const cd=aiStats||mkFallback(name,jersey,pos,team);
-    stepSet(1,'done'); stepSet(2,'active');
-    setStatus('generating','Compositing photo…');
 
-    const sceneUrl=aiSceneUrl||generateSceneBg(selSport,selScene,cd.teamColor1,cd.teamColor2);
-    const composited=await compositeImages(imgData,sceneUrl);
+    stepSet(1,'done'); stepSet(2,'active');
+    setStatus('generating','Building card…');
+
+    // Canvas fallback shows immediately; AI scene loads in background and swaps in
+    const fallbackScene=generateSceneBg(selSport,selScene,cd.teamColor1,cd.teamColor2);
 
     stepSet(2,'done'); stepSet(3,'active');
-    await sleep(300);
-    stepSet(3,'done'); stepSet(4,'active');
-    await sleep(300);
-    stepSet(4,'done');
     await sleep(200);
+    stepSet(3,'done'); stepSet(4,'active');
+    await sleep(200);
+    stepSet(4,'done');
+    await sleep(150);
 
-    populate(cd,jersey,edition,composited);
+    populate(cd,jersey,edition,fallbackScene,imgData);
     setUI('result');
-    setStatus('ok','AI Ready');
+    setStatus('generating','Loading AI scene…');
+
+    // AI scene loads asynchronously and swaps in when ready
+    loadAIScene(selSport,selScene);
+
   }catch(e){
     console.error('Generation error:',e);
     const cd=mkFallback(name,jersey,pos,team);
-    populate(cd,jersey,edition,imgData);
+    const fallbackScene=generateSceneBg(selSport,selScene,cd.teamColor1,cd.teamColor2);
+    populate(cd,jersey,edition,fallbackScene,imgData);
     setUI('result');
     setStatus('ok','AI Ready');
   }finally{
@@ -926,7 +884,7 @@ function mkFallback(name,jersey,pos,team){
   };
 }
 
-function populate(d,jersey,edition,photoUrl){
+function populate(d,jersey,edition,sceneUrl,selfieUrl){
   const lg=LEAGUES[selSport]||selSport.toUpperCase();
   const n=(d.name||'PLAYER').toUpperCase().slice(0,20);
   const p=(d.position||DEFPOS[selSport]).toUpperCase();
@@ -935,7 +893,8 @@ function populate(d,jersey,edition,photoUrl){
   const num=d.cardSerial||'001/999';
   const ed=edition||'ROOKIE CARD';
 
-  ['tImg','bImg','pImg'].forEach(id=>{document.getElementById(id).src=photoUrl;});
+  ['tScene','bScene','pScene'].forEach(id=>{document.getElementById(id).src=sceneUrl;});
+  ['tSelfie','bSelfie','pSelfie'].forEach(id=>{document.getElementById(id).src=selfieUrl;});
 
   document.getElementById('tEd').textContent=ed;
   document.getElementById('tName').textContent=n;
