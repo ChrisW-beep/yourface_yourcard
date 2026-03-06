@@ -436,9 +436,10 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
   </div>
 </div>
 
-<footer>© 2026 CardForge AI · Powered by Pollinations.ai · Card styles inspired by Topps, Bowman & Panini — not affiliated</footer>
+<footer>© 2026 CardForge AI · AI scenes by Puter.js + FLUX · Card styles inspired by Topps, Bowman & Panini — not affiliated</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://js.puter.com/v2/"></script>
 <script>
 /* ── CONSTANTS ── */
 const LEAGUES={Football:'NFL',Baseball:'MLB',Basketball:'NBA',Hockey:'NHL',Soccer:'MLS',Tennis:'ATP',Golf:'PGA',Boxing:'WBC'};
@@ -677,37 +678,34 @@ function generateSceneBg(sport, scene, c1, c2){
   return cv.toDataURL('image/jpeg',0.9);
 }
 
-/* ── AI SCENE URL BUILDER ── */
-function getAISceneUrl(sport, scene){
-  const prompt=(SCENE_PROMPTS[sport]&&SCENE_PROMPTS[sport][scene])||
-    'Professional '+sport+' sports action, stadium, dramatic lighting';
-  const bgPrompt=prompt+', wide angle stadium environment, cinematic lighting, no people, no faces, background only, photorealistic';
-  const seed=Math.floor(Math.random()*9999999);
-  return 'https://image.pollinations.ai/prompt/'+encodeURIComponent(bgPrompt)+'?width=600&height=840&nologo=true&seed='+seed;
-}
-
-/* ── LOAD AI SCENE INTO CARDS IN BACKGROUND ── */
+/* ── AI SCENE GENERATION (Puter.js + FLUX) ── */
 function loadAIScene(sport, scene){
-  const url=getAISceneUrl(sport,scene);
+  if(typeof puter==='undefined'||!puter.ai){
+    console.warn('Puter.js not available');
+    setStatus('ok','AI Ready');
+    return;
+  }
+
+  const prompt=(SCENE_PROMPTS[sport]&&SCENE_PROMPTS[sport][scene])||
+    'Professional '+sport+' action, '+scene+', stadium lighting';
+  const bgPrompt=prompt+', wide angle stadium background, dramatic cinematic lighting, no people visible, no faces, sports venue background only, photorealistic';
+
   const sceneIds=['tScene','bScene','pScene'];
 
-  const img=new Image();
-  img.onload=()=>{
-    console.log('AI scene loaded from Pollinations');
-    sceneIds.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) el.src=url;
+  puter.ai.txt2img(bgPrompt,{model:'black-forest-labs/FLUX.1-schnell-Free'})
+    .then(imgEl=>{
+      console.log('AI scene generated via Puter.js FLUX');
+      const src=imgEl.src;
+      sceneIds.forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.src=src;
+      });
+      setStatus('ok','AI scene ready');
+    })
+    .catch(err=>{
+      console.warn('AI scene generation failed:',err);
+      setStatus('ok','AI Ready (fallback)');
     });
-    setStatus('ok','AI scene loaded');
-  };
-  img.onerror=()=>{
-    console.warn('Pollinations scene failed to load — keeping canvas fallback');
-    setStatus('ok','AI Ready');
-  };
-  img.src=url;
-
-  // Timeout after 60s — just give up silently
-  setTimeout(()=>{ img.src=''; },60000);
 }
 
 /* ── AI STATS GENERATION (Pollinations.ai) ── */
