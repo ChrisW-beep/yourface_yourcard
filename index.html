@@ -444,7 +444,26 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
 <script>
 /* ── CONSTANTS ── */
 const LEAGUES={Football:'NFL',Baseball:'MLB',Basketball:'NBA',Hockey:'NHL',Soccer:'MLS',Tennis:'ATP',Golf:'PGA',Boxing:'WBC'};
-const STATS={Football:['YDS','TD','RTG'],Baseball:['AVG','HR','RBI'],Basketball:['PTS','REB','AST'],Hockey:['G','A','PTS'],Soccer:['GLS','AST','SPD'],Tennis:['ACE','W%','RNK'],Golf:['DRV','GIR','PUT'],Boxing:['KO%','W','RND']};
+const STATS={
+  Football:{throw:['CMP%','YDS','TD'],run:['YDS','TD','AVG'],catch:['REC','YDS','TD'],celebrate:['YDS','TD','RTG']},
+  Baseball:{swing:['AVG','HR','RBI'],pitch:['ERA','W','K'],field:['FLD%','PO','A'],slide:['AVG','SB','R']},
+  Basketball:{dunk:['PTS','FG%','DNK'],shoot:['PTS','3P%','FG%'],drive:['PTS','AST','FTA'],defend:['STL','BLK','DRTG']},
+  Hockey:{shot:['G','SOG','S%'],skate:['G','A','PTS'],celebrate:['G','A','+/-'],goalie:['SV%','GAA','SO']},
+  Soccer:{goal:['GLS','SOT','G/90'],dribble:['DRB','KEY','AST'],header:['GLS','AER','HDR'],freekick:['GLS','FK','AST']},
+  Tennis:{serve:['ACE','1ST%','SPD'],backhand:['WIN','UE','W%'],volley:['NET','WIN','W%'],win:['W-L','ACE','RNK']},
+  Golf:{drive:['DRV','ACC','FWY%'],putt:['PUT','GIR','AVG'],approach:['GIR','PRX','SCR%'],celebrate:['DRV','GIR','AVG']},
+  Boxing:{punch:['KO%','PWR','ACC'],combo:['SPD','CMB','ACC'],victory:['W','KO','RND'],slip:['DEF','EVD','CTR']}
+};
+const SCENE_POS={
+  Football:{throw:'QB',run:'RB',catch:'WR',celebrate:'QB'},
+  Baseball:{swing:'DH',pitch:'SP',field:'CF',slide:'SS'},
+  Basketball:{dunk:'PF',shoot:'SG',drive:'PG',defend:'SF'},
+  Hockey:{shot:'RW',skate:'C',celebrate:'C',goalie:'G'},
+  Soccer:{goal:'FW',dribble:'MID',header:'FW',freekick:'MID'},
+  Tennis:{serve:'PRO',backhand:'PRO',volley:'PRO',win:'PRO'},
+  Golf:{drive:'TOUR',putt:'TOUR',approach:'TOUR',celebrate:'TOUR'},
+  Boxing:{punch:'HVY',combo:'WLT',victory:'HVY',slip:'MID'}
+};
 const DEFPOS={Football:'QB',Baseball:'CF',Basketball:'SG',Hockey:'C',Soccer:'MID',Tennis:'PRO',Golf:'TOUR',Boxing:'HVY'};
 const SCENES={
   Football:[{id:'throw',ic:'🏈',nm:'Throwing deep'},{id:'run',ic:'💨',nm:'Breaking free'},{id:'catch',ic:'🙌',nm:'Big catch'},{id:'celebrate',ic:'🎉',nm:'TD Celebration'}],
@@ -711,11 +730,13 @@ function loadAIScene(sport, scene){
 
 /* ── AI STATS GENERATION (Pollinations.ai) ── */
 async function fetchAIStats(sport, pos, scene, name, team){
-  const sk=STATS[sport]||STATS.Football;
+  const sk=(STATS[sport]&&STATS[sport][scene])||STATS.Football.throw;
+  const scenePos=(SCENE_POS[sport]&&SCENE_POS[sport][scene])||pos;
+  const usePos=pos||scenePos;
   const body={
     messages:[
-      {role:'system',content:'You generate realistic sports card statistics. Respond ONLY with valid JSON, no markdown, no code blocks.'},
-      {role:'user',content:'Generate a '+sport+' player card for a '+pos+' named "'+name+'" on "'+team+'". Scene: '+scene+'. Return JSON: {"name":"PLAYER NAME","position":"POS","team":"TEAM","stats":[{"label":"'+sk[0]+'","value":"123"},{"label":"'+sk[1]+'","value":"45"},{"label":"'+sk[2]+'","value":"67"}],"teamColor1":"#hex","teamColor2":"#hex","cardSerial":"123/999","scouting":"One vivid scouting sentence."}  Use realistic '+sport+' stat values. Make team colors realistic.'}
+      {role:'system',content:'You generate realistic sports card statistics. Respond ONLY with valid JSON, no markdown, no code blocks. Stats must match the position and action scene described.'},
+      {role:'user',content:'Generate a '+sport+' player card for a '+usePos+' named "'+name+'" on "'+team+'". The card depicts the player: '+scene+'. Return JSON: {"name":"PLAYER NAME","position":"'+usePos+'","team":"TEAM","stats":[{"label":"'+sk[0]+'","value":"REALISTIC_VALUE"},{"label":"'+sk[1]+'","value":"REALISTIC_VALUE"},{"label":"'+sk[2]+'","value":"REALISTIC_VALUE"}],"teamColor1":"#hex","teamColor2":"#hex","cardSerial":"123/999","scouting":"One vivid scouting sentence describing the player in this scene."}  The stat labels MUST be exactly '+sk.join(', ')+'. Use realistic '+sport+' stat values appropriate for a '+usePos+'. Make team colors realistic for the team.'}
     ],
     model:'openai',
     jsonMode:true
@@ -812,7 +833,7 @@ async function generate(){
 
   const name=document.getElementById('iName').value.trim()||'Star Player';
   const jersey=document.getElementById('iJersey').value.trim()||'00';
-  const pos=document.getElementById('iPos').value.trim()||DEFPOS[selSport];
+  const pos=document.getElementById('iPos').value.trim()||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport];
   const team=document.getElementById('iTeam').value.trim()||'Home Team';
   const edition=document.getElementById('iEd').value;
 
@@ -868,14 +889,57 @@ function setStatus(type,msg){
 
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
+function mkStatVal(label){
+  const R=()=>Math.random();
+  const ri=(lo,hi)=>String(lo+Math.floor(R()*(hi-lo+1)));
+  const rf=(lo,hi,d)=>(lo+R()*(hi-lo)).toFixed(d);
+  switch(label){
+    case 'CMP%':return rf(58,72,1); case 'FG%':return '.'+ri(440,560);
+    case '3P%':return '.'+ri(340,440); case 'S%':return rf(8,18,1);
+    case 'SV%':return '.'+ri(905,935); case 'FLD%':return '.'+ri(970,998);
+    case '1ST%':return ri(58,72)+'%'; case 'W%':return ri(55,80)+'%';
+    case 'FWY%':return ri(55,75)+'%'; case 'KO%':return ri(40,80)+'%';
+    case 'GIR':return ri(58,78)+'%'; case 'SCR%':return ri(55,75)+'%';
+    case 'ACC':return ri(70,90)+'%'; case 'AER':return ri(55,80)+'%';
+    case 'DEF':return ri(70,90)+'%'; case 'EVD':return ri(65,90)+'%';
+    case 'CTR':return ri(20,60)+'%'; case 'NET':return ri(60,80)+'%';
+    case 'AVG':return '.'+ri(260,350); case 'ERA':return rf(2.1,4.5,2);
+    case 'GAA':return rf(2.0,3.5,2); case 'G/90':return rf(0.3,0.8,2);
+    case 'YDS':return ri(800,5000); case 'TD':return ri(5,45);
+    case 'RTG':return rf(85,115,1); case 'REC':return ri(40,120);
+    case 'HR':return ri(8,46); case 'RBI':return ri(30,120);
+    case 'K':return ri(100,280); case 'W':return ri(8,22);
+    case 'SB':return ri(5,45); case 'R':return ri(40,120);
+    case 'PO':return ri(50,250); case 'A':return ri(15,65);
+    case 'PTS':return ri(12,34); case 'AST':return ri(2,12);
+    case 'REB':return ri(3,13); case 'DNK':return ri(30,150);
+    case 'FTA':return ri(3,10); case 'STL':return rf(1,2.5,1);
+    case 'BLK':return rf(0.5,3,1); case 'DRTG':return ri(100,115);
+    case 'G':return ri(10,50); case 'SOG':return ri(80,280);
+    case '+/-':return '+'+ri(5,35); case 'SO':return ri(1,9);
+    case 'GLS':return ri(5,30); case 'SOT':return ri(20,80);
+    case 'DRB':return ri(30,130); case 'KEY':return ri(20,80);
+    case 'HDR':return ri(3,15); case 'FK':return ri(2,10);
+    case 'ACE':return ri(5,25); case 'SPD':return ri(110,140);
+    case 'UE':return ri(10,35); case 'WIN':return ri(15,55);
+    case 'W-L':return ri(15,40)+'-'+ri(3,15); case 'RNK':return '#'+ri(1,50);
+    case 'DRV':return ri(270,320); case 'PUT':return rf(27,32,1);
+    case 'PRX':return ri(15,35)+'ft'; case 'PWR':return ri(70,95);
+    case 'CMB':return ri(3,8)+'/s'; case 'RND':return ri(3,12);
+    case 'KO':return ri(10,40);
+    default:return ri(50,99);
+  }
+}
+
 function mkFallback(name,jersey,pos,team){
-  const sk=STATS[selSport];
+  const sk=(STATS[selSport]&&STATS[selSport][selScene])||STATS.Football.throw;
+  const usePos=pos||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport];
   const pal=[['#003087','#FFB612'],['#00285C','#BE0000'],['#1D1160','#E56020'],['#041E42','#4FA3E0'],['#005C5C','#FCB514'],['#002D62','#D50032'],['#006341','#CED4DA'],['#97233F','#FFB612']][Math.floor(Math.random()*8)];
   return{
     name:(name||'STAR PLAYER').toUpperCase().slice(0,20),
-    position:(pos||DEFPOS[selSport]).toUpperCase(),
+    position:usePos.toUpperCase(),
     team:(team||'HOME TEAM').toUpperCase().slice(0,16),
-    stats:[{label:sk[0],value:selSport==='Baseball'?'.'+String(280+Math.floor(Math.random()*60)):String(65+Math.floor(Math.random()*33))},{label:sk[1],value:String(8+Math.floor(Math.random()*38))},{label:sk[2],value:String(22+Math.floor(Math.random()*75))}],
+    stats:sk.map(label=>({label,value:mkStatVal(label)})),
     teamColor1:pal[0],teamColor2:pal[1],
     cardSerial:String(Math.floor(Math.random()*899)+100)+'/999',
     scouting:'A dynamic athlete with elite physical tools and the competitive fire to match any opponent on any stage.',
@@ -886,7 +950,7 @@ function mkFallback(name,jersey,pos,team){
 function populate(d,jersey,edition,sceneUrl,selfieUrl){
   const lg=LEAGUES[selSport]||selSport.toUpperCase();
   const n=(d.name||'PLAYER').toUpperCase().slice(0,20);
-  const p=(d.position||DEFPOS[selSport]).toUpperCase();
+  const p=(d.position||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport]).toUpperCase();
   const t=(d.team||'TEAM').toUpperCase().slice(0,16);
   const c1=d.teamColor1||'#003087', c2=d.teamColor2||'#FFB612';
   const num=d.cardSerial||'001/999';
