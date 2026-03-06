@@ -327,6 +327,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
         <div class="sp" data-sport="Tennis"><em>🎾</em><s>Tennis</s></div>
         <div class="sp" data-sport="Golf"><em>⛳</em><s>Golf</s></div>
         <div class="sp" data-sport="Boxing"><em>🥊</em><s>Boxing</s></div>
+        <div class="sp" data-sport="Softball"><em>🥎</em><s>Softball</s></div>
       </div>
     </div>
 
@@ -471,7 +472,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
 <script src="https://js.puter.com/v2/"></script>
 <script>
 /* ── CONSTANTS ── */
-const LEAGUES={Football:'NFL',Baseball:'MLB',Basketball:'NBA',Hockey:'NHL',Soccer:'MLS',Tennis:'ATP',Golf:'PGA',Boxing:'WBC'};
+const LEAGUES={Football:'NFL',Baseball:'MLB',Basketball:'NBA',Hockey:'NHL',Soccer:'MLS',Tennis:'ATP',Golf:'PGA',Boxing:'WBC',Softball:'NPF'};
 const STATS={
   Football:{throw:['CMP%','YDS','TD'],run:['YDS','TD','AVG'],catch:['REC','YDS','TD'],celebrate:['YDS','TD','RTG']},
   Baseball:{swing:['AVG','HR','RBI'],pitch:['ERA','W','K'],field:['FLD%','PO','A'],slide:['AVG','SB','R']},
@@ -480,7 +481,8 @@ const STATS={
   Soccer:{goal:['GLS','SOT','G/90'],dribble:['DRB','KEY','AST'],header:['GLS','AER','HDR'],freekick:['GLS','FK','AST']},
   Tennis:{serve:['ACE','1ST%','SPD'],backhand:['WIN','UE','W%'],volley:['NET','WIN','W%'],win:['W-L','ACE','RNK']},
   Golf:{drive:['DRV','ACC','FWY%'],putt:['PUT','GIR','AVG'],approach:['GIR','PRX','SCR%'],celebrate:['DRV','GIR','AVG']},
-  Boxing:{punch:['KO%','PWR','ACC'],combo:['SPD','CMB','ACC'],victory:['W','KO','RND'],slip:['DEF','EVD','CTR']}
+  Boxing:{punch:['KO%','PWR','ACC'],combo:['SPD','CMB','ACC'],victory:['W','KO','RND'],slip:['DEF','EVD','CTR']},
+  Softball:{swing:['AVG','HR','RBI'],pitch:['ERA','W','K'],field:['FLD%','PO','A'],slide:['AVG','SB','R']}
 };
 const SCENE_POS={
   Football:{throw:'QB',run:'RB',catch:'WR',celebrate:'QB'},
@@ -490,9 +492,10 @@ const SCENE_POS={
   Soccer:{goal:'FW',dribble:'MID',header:'FW',freekick:'MID'},
   Tennis:{serve:'PRO',backhand:'PRO',volley:'PRO',win:'PRO'},
   Golf:{drive:'TOUR',putt:'TOUR',approach:'TOUR',celebrate:'TOUR'},
-  Boxing:{punch:'HVY',combo:'WLT',victory:'HVY',slip:'MID'}
+  Boxing:{punch:'HVY',combo:'WLT',victory:'HVY',slip:'MID'},
+  Softball:{swing:'UT',pitch:'P',field:'CF',slide:'SS'}
 };
-const DEFPOS={Football:'QB',Baseball:'CF',Basketball:'SG',Hockey:'C',Soccer:'MID',Tennis:'PRO',Golf:'TOUR',Boxing:'HVY'};
+const DEFPOS={Football:'QB',Baseball:'CF',Basketball:'SG',Hockey:'C',Soccer:'MID',Tennis:'PRO',Golf:'TOUR',Boxing:'HVY',Softball:'UT'};
 const SCENES={
   Football:[{id:'throw',ic:'🏈',nm:'Throwing deep'},{id:'run',ic:'💨',nm:'Breaking free'},{id:'catch',ic:'🙌',nm:'Big catch'},{id:'celebrate',ic:'🎉',nm:'TD Celebration'}],
   Baseball:[{id:'swing',ic:'⚾',nm:'Home run swing'},{id:'pitch',ic:'💪',nm:'Pitching'},{id:'field',ic:'🧤',nm:'Making a play'},{id:'slide',ic:'💨',nm:'Sliding home'}],
@@ -501,7 +504,8 @@ const SCENES={
   Soccer:[{id:'goal',ic:'⚽',nm:'Scoring goal'},{id:'dribble',ic:'💨',nm:'Dribbling'},{id:'header',ic:'🤯',nm:'Header'},{id:'freekick',ic:'🎯',nm:'Free kick'}],
   Tennis:[{id:'serve',ic:'🎾',nm:'Serving'},{id:'backhand',ic:'💥',nm:'Backhand'},{id:'volley',ic:'🎾',nm:'Net volley'},{id:'win',ic:'🏆',nm:'Match point'}],
   Golf:[{id:'drive',ic:'⛳',nm:'Tee drive'},{id:'putt',ic:'🎯',nm:'Putting'},{id:'approach',ic:'🌿',nm:'Approach'},{id:'celebrate',ic:'🏆',nm:'Hole-in-one!'}],
-  Boxing:[{id:'punch',ic:'🥊',nm:'Power punch'},{id:'combo',ic:'💥',nm:'Combination'},{id:'victory',ic:'🏆',nm:'Victory pose'},{id:'slip',ic:'🛡️',nm:'Slipping punches'}]
+  Boxing:[{id:'punch',ic:'🥊',nm:'Power punch'},{id:'combo',ic:'💥',nm:'Combination'},{id:'victory',ic:'🏆',nm:'Victory pose'},{id:'slip',ic:'🛡️',nm:'Slipping punches'}],
+  Softball:[{id:'swing',ic:'🥎',nm:'Big swing'},{id:'pitch',ic:'💪',nm:'Windmill pitch'},{id:'field',ic:'🧤',nm:'Making a play'},{id:'slide',ic:'💨',nm:'Sliding in'}]
 };
 
 // Scene → detailed image generation prompt
@@ -553,6 +557,12 @@ const SCENE_PROMPTS={
     combo:"A professional boxer throwing a sharp combination, blurred fists, determined expression, boxing ring",
     victory:"A professional boxer celebrating a victory, arms raised by the referee, arena crowd cheering, championship belt",
     slip:"A professional boxer slipping a punch with defensive brilliance, counter-punching, boxing ring, crowd"
+  },
+  Softball:{
+    swing:"A professional softball player crushing a powerful swing, bat making contact, ball rocketing off, stadium lights at night, fast-pitch game action",
+    pitch:"A professional softball pitcher in full windmill delivery, explosive release, dirt circle mound, stadium crowd behind",
+    field:"A professional softball player making a diving catch in the outfield, fully extended, bright green grass, stadium lights",
+    slide:"A professional softball player sliding feet-first into home plate, dust cloud erupting, catcher blocking the plate, intense game action"
   }
 };
 
@@ -722,6 +732,15 @@ function generateSceneBg(sport, scene, c1, c2){
     cx.fillStyle='#d4c090'; cx.beginPath(); cx.ellipse(W*0.7,H*0.8,35,18,0.2,0,Math.PI*2); cx.fill();
     cx.strokeStyle='#aaa'; cx.lineWidth=2; cx.beginPath();cx.moveTo(W*0.45,H*0.55);cx.lineTo(W*0.45,H*0.7);cx.stroke();
     cx.fillStyle='#cc2222'; cx.beginPath();cx.moveTo(W*0.45,H*0.55);cx.lineTo(W*0.5,H*0.575);cx.lineTo(W*0.45,H*0.6);cx.fill();
+  } else if(sport==='Softball'){
+    drawStadium('#2a6e2a','#0c1828');
+    cx.fillStyle='#8a6930';
+    cx.beginPath();cx.moveTo(W*0.5,H*0.5);cx.lineTo(W*0.15,H);cx.lineTo(W*0.85,H);cx.closePath();cx.fill();
+    cx.fillStyle='#8a6930';cx.beginPath();cx.arc(W*0.5,H*0.68,45,0,Math.PI*2);cx.fill();
+    cx.strokeStyle='rgba(255,255,255,0.3)';cx.lineWidth=2;cx.beginPath();cx.arc(W*0.5,H*0.68,46,0,Math.PI*2);cx.stroke();
+    cx.fillStyle='rgba(255,255,255,0.6)';
+    [[0.5,0.88],[0.3,0.7],[0.7,0.7],[0.5,0.54]].forEach(([bx,by])=>{cx.save();cx.translate(W*bx,H*by);cx.rotate(Math.PI/4);cx.fillRect(-5,-5,10,10);cx.restore();});
+    drawLights();
   } else if(sport==='Boxing'){
     cx.fillStyle='#08080e'; cx.fillRect(0,0,W,H);
     for(let row=0;row<8;row++){const y=H*0.02+row*18;for(let x=0;x<W;x+=5+R()*3){cx.fillStyle=`rgba(${60+R()*80},${40+R()*60},${30+R()*50},${0.15+R()*0.2})`;cx.fillRect(x,y,3,4);}}
