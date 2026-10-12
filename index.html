@@ -28,11 +28,11 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .dot.err{background:var(--red);}
 
 /* ── HERO ── */
-.hero{position:relative;z-index:5;text-align:center;padding:44px 24px 28px;}
+.hero{position:relative;z-index:5;text-align:center;padding:30px 24px 24px;}
 .hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:350px;background:radial-gradient(ellipse,rgba(201,149,42,0.06) 0%,transparent 70%);pointer-events:none;}
 .hero-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
 .hero-tag::before,.hero-tag::after{content:'';display:block;width:28px;height:1px;background:var(--gold);}
-.hero h1{font-family:'Anton',sans-serif;font-size:clamp(3rem,9vw,7rem);letter-spacing:2px;line-height:0.88;}
+.hero h1{font-family:'Anton',sans-serif;font-size:clamp(2.6rem,7vw,4.8rem);letter-spacing:2px;line-height:0.88;}
 .hero h1 span{display:block;color:transparent;-webkit-text-stroke:1.5px var(--gold2);}
 .hero-sub{margin-top:14px;font-size:0.95rem;color:var(--muted2);font-weight:300;max-width:500px;margin-inline:auto;line-height:1.5;}
 
@@ -44,7 +44,7 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .api-notice a:hover{text-decoration:underline;}
 
 /* style tabs */
-.style-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;flex-wrap:wrap;}
+.style-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 22px;flex-wrap:wrap;}
 .stab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 16px;border:1px solid var(--bdr);border-radius:4px;background:none;cursor:pointer;transition:all 0.2s;min-width:100px;}
 .stab:hover{border-color:var(--bdr2);background:rgba(255,255,255,0.02);}
 .stab.on{border-color:var(--gold2);background:rgba(232,184,75,0.07);}
@@ -81,7 +81,7 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 
 /* sport grid */
 .sg{padding:11px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
-.sp{border:1px solid var(--bdr);border-radius:3px;padding:8px 4px;text-align:center;cursor:pointer;transition:all 0.18s;background:none;}
+.sp{border:1px solid var(--bdr);border-radius:3px;padding:8px 4px;text-align:center;cursor:pointer;transition:all 0.18s;background:none;font:inherit;color:inherit;}
 .sp:hover{border-color:var(--bdr2);background:rgba(255,255,255,0.02);}
 .sp.on{border-color:var(--gold2);background:rgba(232,184,75,0.08);}
 .sp em{font-size:1.25rem;display:block;margin-bottom:2px;font-style:normal;line-height:1;}
@@ -147,7 +147,7 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .btn-gen:disabled{opacity:0.38;cursor:not-allowed;filter:none;box-shadow:none;}
 
 /* ── STAGE ── */
-.stage{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:540px;padding:24px 14px;gap:0;}
+.stage{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:540px;padding:0 14px 24px;gap:0;position:sticky;top:16px;align-self:start;}
 
 .empty{display:flex;flex-direction:column;align-items:center;gap:13px;opacity:0.3;}
 .ph-crd{width:var(--cw);height:var(--ch);border:1.5px dashed rgba(201,149,42,0.22);border-radius:14px;display:flex;align-items:center;justify-content:center;}
@@ -155,17 +155,11 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .empty-lbl{font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:4px;text-transform:uppercase;color:var(--muted);}
 
 /* loading */
-.loading{display:none;flex-direction:column;align-items:center;gap:16px;text-align:center;}
+.loading{display:none;flex-direction:column;align-items:center;gap:16px;text-align:center;margin-top:120px;}
 .spin-ring{width:52px;height:52px;border:2px solid rgba(201,149,42,0.1);border-top-color:var(--gold);border-right-color:var(--gold2);border-radius:50%;animation:spin 0.85s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .spin-ttl{font-family:'Oswald',sans-serif;font-size:0.95rem;letter-spacing:5px;color:var(--gold2);}
-.steps-list{display:flex;flex-direction:column;gap:5px;width:100%;max-width:290px;}
-.step-row{display:flex;align-items:center;gap:9px;padding:6px 11px;border:1px solid var(--bdr);border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);transition:all 0.3s;background:rgba(255,255,255,0.01);}
-.step-row.active{border-color:rgba(201,149,42,0.3);color:var(--gold2);background:rgba(201,149,42,0.05);}
-.step-row.done{border-color:rgba(46,204,113,0.2);color:#4ade80;background:rgba(46,204,113,0.04);}
-.step-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.step-row.active .step-dot{animation:pd 1s infinite;}
-@keyframes pd{0%,100%{opacity:.3}50%{opacity:1}}
+.load-sub{font-size:0.78rem;color:var(--muted2);max-width:260px;line-height:1.5;}
 
 /* result */
 .result{display:none;flex-direction:column;align-items:center;gap:16px;}
@@ -194,7 +188,7 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 .scene-msg button{flex-shrink:0;}
 
 /* actions */
-.cacts{display:flex;gap:7px;}
+.cacts{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;}
 .btn-act{background:none;border:1px solid var(--bdr);border-radius:3px;padding:8px 14px;color:var(--muted2);font-family:'Oswald',sans-serif;font-size:0.65rem;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:5px;}
 .btn-act:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,149,42,0.05);}
 .btn-act.hi{background:rgba(201,149,42,0.08);border-color:rgba(201,149,42,0.38);color:var(--gold2);}
@@ -203,7 +197,18 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 
 footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px solid var(--bdr);font-size:0.68rem;color:var(--muted);letter-spacing:1px;}
 
-@media(max-width:820px){.ws{grid-template-columns:1fr;} header{padding:13px 18px;} .stage{min-height:460px;}}
+.scout-note:empty{display:none;}
+.dz:focus-within{border-color:var(--gold2);}
+.dz-err{font-size:0.74rem;color:#f0a79e;line-height:1.4;}
+.dz-err:not(:empty){margin-top:9px;}
+.gen-sub{font-size:0.7rem;color:var(--muted);line-height:1.45;margin-top:8px;text-align:center;}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);z-index:10000;max-width:min(92vw,420px);padding:10px 16px;border:1px solid var(--bdr2);border-radius:4px;background:var(--bg3);color:var(--txt);font-size:0.8rem;line-height:1.4;opacity:0;pointer-events:none;transition:opacity 0.25s,transform 0.25s;}
+.toast.on{opacity:1;transform:translate(-50%,0);}
+button:focus-visible,select:focus-visible,.pctl input:focus-visible{outline:2px solid var(--gold2);outline-offset:2px;}
+
+/* single column: the card sits right under the upload panel instead of below the whole form */
+@media(max-width:820px){.ws{grid-template-columns:1fr;gap:0;} header{padding:13px 18px;} .ws>div:first-child{display:contents;} .ws .panel{order:2;margin-bottom:12px;} .ws .panel:first-child{order:0;} .stage{order:1;min-height:0;position:static;padding:14px 14px 26px;} .loading{margin:60px 0;}}
+@media(prefers-reduced-motion:reduce){.card,.card:hover{transform:none;transition:none;}.card.in{animation:none;}}
 @keyframes cardIn{from{opacity:0;transform:perspective(1000px) rotateY(-5deg) rotateX(3deg) translateY(22px) scale(0.96);}to{opacity:1;transform:perspective(1000px) rotateY(-5deg) rotateX(3deg) translateY(0) scale(1);}}
 .card.in{animation:cardIn 0.65s cubic-bezier(0.23,1,0.32,1) forwards;}
 </style>
@@ -225,11 +230,6 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
     <p>Free &amp; instant — no signup needed. Upload a photo, choose a sport and action scene, and CardForge builds a complete trading card with an AI-generated stadium background and player stats. <strong>Your photos never leave your browser</strong> — nothing is uploaded or stored on any server.</p>
   </div>
 
-  <div class="style-row">
-    <button class="stab on" data-style="fopps"><span class="stab-brand">FOPPS</span><span class="stab-sub">Chrome Series</span></button>
-    <button class="stab" data-style="fowman"><span class="stab-brand">FOWMAN</span><span class="stab-sub">Draft Chrome</span></button>
-    <button class="stab" data-style="frizim"><span class="stab-brand">FRIZIM</span><span class="stab-sub">Prizm</span></button>
-  </div>
 </section>
 
 <div class="ws">
@@ -243,10 +243,11 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
           <input type="file" id="fileIn" accept="image/*">
           <div class="dz-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
           <p class="dz-lbl">Drop photo here</p>
-          <p class="dz-sub">Any photo or portrait · PNG JPG WEBP · Max 10MB</p>
+          <p class="dz-sub">A photo of a person works best · JPG PNG WEBP · or paste with Ctrl+V</p>
           <p class="dz-sub" style="opacity:.55;margin-top:4px;font-size:.7rem">🔒 100% private — your photo stays in your browser</p>
         </div>
         <div class="pvw" id="pvw"><img id="pvwImg" src="" alt=""><div class="pvw-bar"><span class="pvw-ok" id="pvwOk">✓ Ready</span><button class="btn-chg" id="btnChg">Change</button></div></div>
+        <p class="dz-err" id="dzErr" role="alert"></p>
       </div>
     </div>
 
@@ -254,15 +255,15 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
     <div class="panel">
       <div class="ph"><div class="stepnum">2</div><div class="ph-title">Sport</div></div>
       <div class="sg">
-        <div class="sp on" data-sport="Football"><em>🏈</em><s>Football</s></div>
-        <div class="sp" data-sport="Baseball"><em>⚾</em><s>Baseball</s></div>
-        <div class="sp" data-sport="Basketball"><em>🏀</em><s>Basketball</s></div>
-        <div class="sp" data-sport="Hockey"><em>🏒</em><s>Hockey</s></div>
-        <div class="sp" data-sport="Soccer"><em>⚽</em><s>Soccer</s></div>
-        <div class="sp" data-sport="Tennis"><em>🎾</em><s>Tennis</s></div>
-        <div class="sp" data-sport="Golf"><em>⛳</em><s>Golf</s></div>
-        <div class="sp" data-sport="Boxing"><em>🥊</em><s>Boxing</s></div>
-        <div class="sp" data-sport="Softball"><em>🥎</em><s>Softball</s></div>
+        <button type="button" class="sp on" data-sport="Football"><em>🏈</em><s>Football</s></button>
+        <button type="button" class="sp" data-sport="Baseball"><em>⚾</em><s>Baseball</s></button>
+        <button type="button" class="sp" data-sport="Basketball"><em>🏀</em><s>Basketball</s></button>
+        <button type="button" class="sp" data-sport="Hockey"><em>🏒</em><s>Hockey</s></button>
+        <button type="button" class="sp" data-sport="Soccer"><em>⚽</em><s>Soccer</s></button>
+        <button type="button" class="sp" data-sport="Tennis"><em>🎾</em><s>Tennis</s></button>
+        <button type="button" class="sp" data-sport="Golf"><em>⛳</em><s>Golf</s></button>
+        <button type="button" class="sp" data-sport="Boxing"><em>🥊</em><s>Boxing</s></button>
+        <button type="button" class="sp" data-sport="Softball"><em>🥎</em><s>Softball</s></button>
       </div>
     </div>
 
@@ -280,11 +281,11 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
       <div class="ph"><div class="stepnum">4</div><div class="ph-title">Player Details</div></div>
       <div class="fb">
         <div class="fg">
-          <div class="fi"><label>Player Name</label><input id="iName" type="text" placeholder="Your Name" maxlength="26"></div>
-          <div class="fi"><label>Jersey #</label><input id="iJersey" type="text" placeholder="00" maxlength="3"></div>
-          <div class="fi"><label>Position</label><input id="iPos" type="text" placeholder="e.g. QB" maxlength="20"></div>
-          <div class="fi"><label>Team Name</label><input id="iTeam" type="text" placeholder="Team" maxlength="18"></div>
-          <div class="fi full"><label>Edition</label>
+          <div class="fi"><label for="iName">Player Name</label><input id="iName" type="text" placeholder="Your Name" maxlength="26"></div>
+          <div class="fi"><label for="iJersey">Jersey #</label><input id="iJersey" type="text" placeholder="00" maxlength="3"></div>
+          <div class="fi"><label for="iPos">Position</label><input id="iPos" type="text" placeholder="e.g. QB" maxlength="20"></div>
+          <div class="fi"><label for="iTeam">Team Name</label><input id="iTeam" type="text" placeholder="Team" maxlength="18"></div>
+          <div class="fi full"><label for="iEd">Edition</label>
             <select id="iEd">
               <option value="ROOKIE CARD">🌟 Rookie Card</option>
               <option value="ALL-STAR">⭐ All-Star Edition</option>
@@ -305,22 +306,27 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
             </div>
             <div class="custom-stats-area" id="customStatsArea" style="display:none">
               <div class="custom-stats-grid">
-                <div class="fi"><label id="csLabel1">STAT 1</label><input id="csStat1" type="text" placeholder="auto" maxlength="10"></div>
-                <div class="fi"><label id="csLabel2">STAT 2</label><input id="csStat2" type="text" placeholder="auto" maxlength="10"></div>
-                <div class="fi"><label id="csLabel3">STAT 3</label><input id="csStat3" type="text" placeholder="auto" maxlength="10"></div>
+                <div class="fi"><label id="csLabel1" for="csStat1">STAT 1</label><input id="csStat1" type="text" placeholder="auto" maxlength="10"></div>
+                <div class="fi"><label id="csLabel2" for="csStat2">STAT 2</label><input id="csStat2" type="text" placeholder="auto" maxlength="10"></div>
+                <div class="fi"><label id="csLabel3" for="csStat3">STAT 3</label><input id="csStat3" type="text" placeholder="auto" maxlength="10"></div>
               </div>
-              <span class="stats-hint">Leave blank for AI-generated values</span>
+              <span class="stats-hint">Leave blank to keep the generated value</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="gw"><button class="btn-gen" id="btnGen" disabled>⚡ FORGE MY CARD</button></div>
+      <div class="gw"><button class="btn-gen" id="btnGen" disabled>UPLOAD A PHOTO TO START</button><p class="gen-sub">Forging adds an AI stadium backdrop, realistic stats and a scouting report. Everything else updates on the card as you type.</p></div>
     </div>
 
   </div>
 
   <!-- STAGE -->
   <div class="stage" id="stage">
+    <div class="style-row">
+      <button class="stab on" data-style="fopps"><span class="stab-brand">FOPPS</span><span class="stab-sub">Chrome Series</span></button>
+      <button class="stab" data-style="fowman"><span class="stab-brand">FOWMAN</span><span class="stab-sub">Draft Chrome</span></button>
+      <button class="stab" data-style="frizim"><span class="stab-brand">FRIZIM</span><span class="stab-sub">Prizm</span></button>
+    </div>
 
     <div class="empty" id="stEmpty">
       <div class="ph-crd"><svg viewBox="0 0 80 112"><rect x="2" y="2" width="76" height="108" rx="8" stroke-width="1.5"/><rect x="8" y="8" width="64" height="64" rx="3" stroke-width="1"/><line x1="8" y1="82" x2="52" y2="82"/><line x1="8" y1="91" x2="40" y2="91"/><line x1="8" y1="100" x2="30" y2="100"/></svg></div>
@@ -329,18 +335,13 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
 
     <div class="loading" id="stLoad">
       <div class="spin-ring"></div>
-      <div class="spin-ttl">CREATING YOUR CARD</div>
-      <div class="steps-list">
-        <div class="step-row" id="sr1"><div class="step-dot"></div>AI generating scene — up to 30s</div>
-        <div class="step-row" id="sr2"><div class="step-dot"></div>Compositing your photo</div>
-        <div class="step-row" id="sr3"><div class="step-dot"></div>Assembling card layout</div>
-        <div class="step-row" id="sr4"><div class="step-dot"></div>Printing collector card</div>
-      </div>
+      <div class="spin-ttl">PREPARING YOUR PHOTO</div>
+      <div class="load-sub">Removing the background. The first photo takes a few seconds while the model downloads.</div>
     </div>
 
     <div class="result" id="stResult">
 
-      <canvas class="card fopps" id="cardCv" width="600" height="840"></canvas>
+      <canvas class="card fopps" id="cardCv" width="600" height="840" role="img" aria-label="Your trading card preview"></canvas>
 
       <div class="pctl">
         <label>Zoom <input type="range" id="zoomIn" min="50" max="300" value="100"></label>
@@ -354,7 +355,6 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
         <button class="btn-act hi" id="btnDl"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save</button>
         <button class="btn-act hi print-btn" id="btnPrint"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print Card</button>
         <button class="btn-act" id="btnRegen"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>New Scene</button>
-        <button class="btn-act" id="btnCycle">Switch Style</button>
       </div>
       <div class="scout-note" id="scoutNote"></div>
     </div>
@@ -394,6 +394,8 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
     <p class="print-tip">💡 <strong>Tip:</strong> For best results at home, use 110lb cardstock and a color laser printer. Standard trading cards are 2.5" × 3.5" (63.5mm × 88.9mm).</p>
   </div>
 </div>
+
+<div class="toast" id="toast" role="status"></div>
 
 <footer>© 2026 CardForge AI · AI scenes by Puter.js + FLUX · Original card designs — not affiliated with any trading card company</footer>
 
@@ -519,7 +521,7 @@ document.querySelectorAll('.stab').forEach(b=>b.addEventListener('click',()=>{
 /* ── SPORT ── */
 document.querySelectorAll('.sp').forEach(s=>s.addEventListener('click',()=>{
   document.querySelectorAll('.sp').forEach(x=>x.classList.remove('on'));
-  s.classList.add('on'); selSport=s.dataset.sport; buildScenes(); updateStatLabels();
+  s.classList.add('on'); selSport=s.dataset.sport; buildScenes(); updateStatLabels(); if(card)buildCard();
 }));
 
 function buildScenes(){
@@ -529,7 +531,7 @@ function buildScenes(){
   g.innerHTML=sc.map((s,i)=>`<button class="scb${i===0?' on':''}" data-scene="${s.id}"><span class="sc-ic">${s.ic}</span><span class="sc-nm">${s.nm}</span></button>`).join('');
   g.querySelectorAll('.scb').forEach(b=>b.addEventListener('click',()=>{
     g.querySelectorAll('.scb').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on'); selScene=b.dataset.scene; updateStatLabels();
+    b.classList.add('on'); selScene=b.dataset.scene; updateStatLabels(); if(card)buildCard();
   }));
 }
 buildScenes();
@@ -539,6 +541,7 @@ const csToggle=document.getElementById('customStatsToggle');
 const csArea=document.getElementById('customStatsArea');
 csToggle.addEventListener('change',()=>{
   csArea.style.display=csToggle.checked?'block':'none';
+  applyForm();
 });
 
 function updateStatLabels(){
@@ -549,8 +552,13 @@ function updateStatLabels(){
   document.getElementById('csStat1').placeholder=sk[0]+' value';
   document.getElementById('csStat2').placeholder=sk[1]+' value';
   document.getElementById('csStat3').placeholder=sk[2]+' value';
+  document.getElementById('iPos').placeholder='e.g. '+((SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport]);
 }
 updateStatLabels();
+
+// Text edits show on the card straight away
+['iName','iJersey','iPos','iTeam','csStat1','csStat2','csStat3'].forEach(id=>document.getElementById(id).addEventListener('input',applyForm));
+document.getElementById('iEd').addEventListener('change',applyForm);
 
 /* ── UPLOAD ── */
 const dz=document.getElementById('dz'),fileIn=document.getElementById('fileIn'),
@@ -560,28 +568,31 @@ dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');}
 dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
 dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
 document.getElementById('btnChg').addEventListener('click',resetUpload);
-function resetUpload(){pvw.style.display='none';dz.style.display='block';imgData=null;document.getElementById('btnGen').disabled=true;fileIn.value='';}
+function dzError(msg){document.getElementById('dzErr').textContent=msg||'';}
+function resetUpload(){pvw.style.display='none';dz.style.display='block';imgData=null;fileIn.value='';subjTok++;setUI(card?'result':'empty');}
 function loadFile(f){
-  if(f.size>10*1024*1024){alert('Max 10MB');return;}
+  dzError();
+  if(!f.type.startsWith('image/')){dzError("That file isn't an image — try a JPG, PNG or WEBP.");return;}
+  if(f.size>25*1024*1024){dzError('That photo is over 25MB — try a smaller one.');return;}
   const r=new FileReader();
-  r.onload=e=>{imgData=e.target.result;pvwImg.src=imgData;dz.style.display='none';pvw.style.display='block';document.getElementById('btnGen').disabled=false;subjReady=prepSubject(imgData).catch(err=>console.warn('Photo prep failed:',err));};
+  r.onload=e=>{imgData=e.target.result;pvwImg.src=imgData;dz.style.display='none';pvw.style.display='block';prepSubject(imgData).catch(err=>console.error('Photo prep failed:',err));};
   r.readAsDataURL(f);
 }
+document.addEventListener('paste',e=>{
+  const f=[...((e.clipboardData&&e.clipboardData.files)||[])].find(x=>x.type.startsWith('image/'));
+  if(f){e.preventDefault();loadFile(f);}
+});
 
 /* ── GENERATE ── */
 document.getElementById('btnGen').addEventListener('click',generate);
 document.getElementById('btnRegen').addEventListener('click',newScene);
-document.getElementById('btnCycle').addEventListener('click',()=>{
-  const s=['fopps','fowman','frizim']; const ni=(s.indexOf(selStyle)+1)%3; selStyle=s[ni];
-  document.querySelectorAll('.stab').forEach(b=>b.classList.toggle('on',b.dataset.style===selStyle));
-  if(document.getElementById('stResult').style.display==='flex') showCard();
-});
 document.getElementById('btnDl').addEventListener('click', downloadCard);
 
 /* ── PRINT MODAL ── */
 document.getElementById('btnPrint').addEventListener('click',()=>{document.getElementById('printModal').style.display='flex';});
 document.getElementById('printModalClose').addEventListener('click',()=>{document.getElementById('printModal').style.display='none';});
 document.getElementById('printModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget)e.currentTarget.style.display='none';});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('printModal').style.display='none';});
 document.getElementById('btnPrintHQ').addEventListener('click', downloadPrintFile);
 
 
@@ -822,7 +833,7 @@ const MP='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
 const SEG_MODEL='https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite';
 const subj={photo:null,cut:null,box:null,head:null,useCut:false};
 const view={x:0,y:0,z:1};
-let subjReady=Promise.resolve(), subjTok=0, segP=null;
+let subjTok=0, segP=null;
 
 function mkCanvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
 function loadImg(src){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>rej(new Error('Image failed to load'));im.src=src;});}
@@ -878,14 +889,19 @@ async function cutOut(photo){
 async function prepSubject(url){
   const my=++subjTok;
   const note=t=>{if(my===subjTok)document.getElementById('pvwOk').textContent=t;};
-  const im=await loadImg(url);
+  setUI('loading');
+  let im;
+  try{im=await loadImg(url);}
+  catch(e){
+    if(my===subjTok){resetUpload();dzError("Couldn't read that image. HEIC photos don't open in most browsers — try a JPG or PNG.");}
+    return;
+  }
   if(my!==subjTok) return;
   const k=Math.min(1,1600/Math.max(im.naturalWidth,im.naturalHeight));
   const photo=mkCanvas(Math.round(im.naturalWidth*k),Math.round(im.naturalHeight*k));
   photo.getContext('2d').drawImage(im,0,0,photo.width,photo.height);
   Object.assign(subj,{photo,cut:null,box:null,head:null,useCut:false});
   Object.assign(view,{x:0,y:0,z:1});
-  syncCtl(); queueRender();
   note('Removing background…');
   try{
     const r=await cutOut(photo);
@@ -897,7 +913,11 @@ async function prepSubject(url){
     note('✓ Ready — background removal unavailable');
   }
   if(my!==subjTok) return;
-  syncCtl(); queueRender();
+  syncCtl();
+  await fontsReady;
+  if(my!==subjTok) return;
+  // The card shows as soon as the photo is ready; forging only adds the AI parts
+  if(card){setUI('result');showCard();}else buildCard();
 }
 
 /* ── CARD RENDERER ──
@@ -1171,7 +1191,7 @@ document.getElementById('btnRetryScene').addEventListener('click',()=>{
 
 /* ── CARD DOWNLOAD ── */
 function exportCard(S,rounded,name){
-  if(!card){alert('Generate a card first!');return;}
+  if(!card){toast('Upload a photo first.');return;}
   try{
     const out=mkCanvas(Math.round(CW*S),Math.round(CH*S));
     render(out.getContext('2d'),S,rounded);
@@ -1179,9 +1199,10 @@ function exportCard(S,rounded,name){
     link.download=name+'-'+selStyle+'-'+Date.now()+'.png';
     link.href=out.toDataURL('image/png');
     link.click();
+    toast('Saved — check your downloads.');
   }catch(e){
     console.error('Export error:',e);
-    alert('Export failed: '+e.message);
+    toast('Export failed: '+e.message);
   }
 }
 function downloadCard(){exportCard(3,true,'cardforge');}
@@ -1199,77 +1220,93 @@ function newScene(){
   queueRender();
 }
 
-/* ── MAIN GENERATE FLOW ── */
+/* ── CARD STATE ── */
+function formVals(){
+  const v=id=>document.getElementById(id).value.trim();
+  return{
+    name:v('iName')||'Star Player', jersey:v('iJersey'),
+    pos:v('iPos')||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport],
+    team:v('iTeam')||'Home Team', edition:document.getElementById('iEd').value
+  };
+}
+const cleanStats=a=>(a||[]).slice(0,3).map(s=>({label:String((s&&s.label)??''),value:String((s&&s.value)??'')}));
+// Colors can come from the stats model; canvas gradients throw on anything invalid
+const hexOr=(c,def)=>/^#[0-9a-f]{6}$/i.test(c||'')?c:def;
+
+// Copies the form onto the current card, so edits show without re-forging
+function applyForm(){
+  if(!card) return;
+  const f=formVals(), own=document.getElementById('customStatsToggle').checked;
+  card.name=f.name.toUpperCase().slice(0,20);
+  card.team=f.team.toUpperCase().slice(0,16);
+  card.position=f.pos.toUpperCase();
+  card.posLine=card.position+(f.jersey?' · #'+f.jersey.toUpperCase():'');
+  card.edition=f.edition||'ROOKIE CARD';
+  card.stats=card.baseStats.map((s,i)=>{
+    const v=own?document.getElementById('csStat'+(i+1)).value.trim():'';
+    return v?{label:s.label,value:v}:s;
+  });
+  queueRender();
+}
+
+// Instant local card: built-in backdrop and generated stats, no network.
+// Team colors and serial carry over when the sport or scene changes.
+function buildCard(){
+  const f=formVals(), d=mkFallback(f.name,f.jersey,f.pos,f.team), first=!card;
+  const c1=card?card.c1:d.teamColor1, c2=card?card.c2:d.teamColor2;
+  genTok++; ai.pending=0;
+  document.getElementById('sceneMsg').style.display='none';
+  card={
+    tok:genTok, sport:selSport, scene:selScene,
+    fallback:generateSceneBg(selSport,selScene,c1,c2),
+    baseStats:cleanStats(d.stats), c1, c2,
+    serial:card?card.serial:d.cardSerial,
+    league:LEAGUES[selSport]||selSport.toUpperCase()
+  };
+  document.getElementById('scoutNote').textContent='';
+  applyForm();
+  setUI('result');
+  if(first) showCard();
+  setStatus('ok','Preview ready');
+  setForgeBtn();
+}
+
+function setForgeBtn(){
+  const b=document.getElementById('btnGen');
+  b.disabled=!card||busy;
+  b.textContent=busy?'FORGING…':card?'⚡ FORGE WITH AI':'UPLOAD A PHOTO TO START';
+}
+
+/* ── FORGE: AI background, stats and scouting report on top of the live card ── */
 async function generate(){
-  if(!imgData||busy)return; busy=true;
-  const tok=++genTok;
-  loadAIScene(selSport,selScene,tok);
-  document.getElementById('btnGen').disabled=true;
-  setUI('loading');
+  if(!card||busy) return;
+  busy=true; setForgeBtn();
+  const tok=++genTok; card.tok=tok;
+  loadAIScene(card.sport,card.scene,tok);
+  setStatus('generating','Forging…');
+  if(matchMedia('(max-width:820px)').matches) document.getElementById('stage').scrollIntoView({behavior:'smooth',block:'start'});
 
-  const name=document.getElementById('iName').value.trim()||'Star Player';
-  const jersey=document.getElementById('iJersey').value.trim();
-  const pos=document.getElementById('iPos').value.trim()||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport];
-  const team=document.getElementById('iTeam').value.trim()||'Home Team';
-  const edition=document.getElementById('iEd').value;
+  const f=formVals();
+  const r=await fetchAIStats(card.sport,f.pos,card.scene,f.name,f.team);
+  busy=false; setForgeBtn();
+  // The sport or scene changed while this was in flight
+  if(tok!==genTok||!card) return;
+  if(r){
+    const sk=(STATS[card.sport]&&STATS[card.sport][card.scene])||[];
+    card.baseStats=cleanStats(r.stats).map((s,i)=>({label:sk[i]||s.label,value:s.value}));
+    card.c1=hexOr(r.teamColor1,card.c1); card.c2=hexOr(r.teamColor2,card.c2);
+    card.serial=String(r.cardSerial||card.serial);
+    document.getElementById('scoutNote').textContent=r.scouting||'';
+    applyForm();
+  }else toast('AI stats are unavailable right now — keeping the generated ones.');
+  sceneStatus(tok);
+}
 
-  stepSet(1,'active');
-  setStatus('generating','Getting AI stats…');
-
-  const customOn=document.getElementById('customStatsToggle').checked;
-  const cv1=document.getElementById('csStat1').value.trim();
-  const cv2=document.getElementById('csStat2').value.trim();
-  const cv3=document.getElementById('csStat3').value.trim();
-
-  try{
-    let cd;
-    if(customOn&&(cv1||cv2||cv3)){
-      cd=mkFallback(name,jersey,pos,team);
-      const sk=(STATS[selSport]&&STATS[selSport][selScene])||STATS.Football.throw;
-      cd.stats=[
-        {label:sk[0],value:cv1||mkStatVal(sk[0])},
-        {label:sk[1],value:cv2||mkStatVal(sk[1])},
-        {label:sk[2],value:cv3||mkStatVal(sk[2])}
-      ];
-    } else {
-      const aiStats=await fetchAIStats(selSport,pos,selScene,name,team);
-      cd=aiStats||mkFallback(name,jersey,pos,team);
-    }
-
-    stepSet(1,'done'); stepSet(2,'active');
-    setStatus('generating','Building card…');
-
-    // Canvas fallback shows immediately; the AI scene swaps in when it arrives
-    const fallbackScene=generateSceneBg(selSport,selScene,cd.teamColor1,cd.teamColor2);
-    // Background removal may still be running; a late result re-renders the card
-    await Promise.race([Promise.all([subjReady,fontsReady]),sleep(30000)]);
-
-    stepSet(2,'done'); stepSet(3,'active');
-    await sleep(200);
-    stepSet(3,'done'); stepSet(4,'active');
-    await sleep(200);
-    stepSet(4,'done');
-    await sleep(150);
-
-    populate(cd,jersey,edition,fallbackScene,tok);
-    setUI('result');
-    sceneStatus(tok);
-
-  }catch(e){
-    console.error('Generation error:',e);
-    const cd=mkFallback(name,jersey,pos,team);
-    if(customOn&&(cv1||cv2||cv3)){
-      const sk=(STATS[selSport]&&STATS[selSport][selScene])||STATS.Football.throw;
-      cd.stats=[{label:sk[0],value:cv1||mkStatVal(sk[0])},{label:sk[1],value:cv2||mkStatVal(sk[1])},{label:sk[2],value:cv3||mkStatVal(sk[2])}];
-    }
-    const fallbackScene=generateSceneBg(selSport,selScene,cd.teamColor1,cd.teamColor2);
-    populate(cd,jersey,edition,fallbackScene,tok);
-    setUI('result');
-    sceneStatus(tok);
-  }finally{
-    busy=false;
-    document.getElementById('btnGen').disabled=false;
-  }
+let toastT=0;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),3500);
 }
 
 function setStatus(type,msg){
@@ -1281,8 +1318,6 @@ function setStatus(type,msg){
   else{dot.style.background='';dot.style.boxShadow='';}
   txt.textContent=msg;
 }
-
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
 function mkStatVal(label){
   const R=()=>Math.random();
@@ -1342,32 +1377,6 @@ function mkFallback(name,jersey,pos,team){
   };
 }
 
-function populate(d,jersey,edition,fallback,tok){
-  // Colors can come from the stats model; canvas gradients throw on anything invalid
-  const hex=(c,def)=>/^#[0-9a-f]{6}$/i.test(c||'')?c:def;
-  card={
-    tok, sport:selSport, scene:selScene, fallback,
-    name:(d.name||'PLAYER').toUpperCase().slice(0,20),
-    position:(d.position||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport]).toUpperCase(),
-    team:(d.team||'TEAM').toUpperCase().slice(0,16),
-    jersey,
-    stats:(d.stats||[]).slice(0,3).map(s=>({label:String((s&&s.label)??''),value:String((s&&s.value)??'')})),
-    c1:hex(d.teamColor1,'#003087'), c2:hex(d.teamColor2,'#FFB612'),
-    serial:String(d.cardSerial||'001/999'),
-    edition:edition||'ROOKIE CARD',
-    league:LEAGUES[selSport]||selSport.toUpperCase()
-  };
-  card.posLine=card.position+(jersey?' · #'+jersey.toUpperCase():'');
-  document.getElementById('scoutNote').textContent=d.scouting||'';
-  showCard();
-}
-
-function stepSet(n,state){
-  const el=document.getElementById('sr'+n);
-  el.classList.remove('active','done');
-  el.classList.add(state);
-}
-
 function showCard(){
   if(!card) return;
   cardCv.className='card '+selStyle;
@@ -1382,6 +1391,7 @@ function setUI(s){
 }
 
 setUI('empty');
+setForgeBtn();
 </script>
 </body>
 </html>
