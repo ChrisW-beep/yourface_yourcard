@@ -12,7 +12,7 @@
   --gold:#c9952a; --gold2:#e8b84b; --gold3:#f5d070;
   --txt:#ede8df; --muted:#55555f; --muted2:#8a8a98;
   --green:#2ecc71; --red:#e74c3c;
-  --cw:295px; --ch:412px;
+  --cw:300px; --ch:420px;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--txt);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden;}
@@ -173,109 +173,25 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 /* ══════════════════════════════════
    CARDS
 ══════════════════════════════════ */
-.card{width:var(--cw);height:var(--ch);position:relative;overflow:hidden;border-radius:14px;cursor:pointer;transform:perspective(1000px) rotateY(-5deg) rotateX(3deg);transition:transform 0.55s cubic-bezier(0.23,1,0.32,1),box-shadow 0.55s ease;flex-shrink:0;user-select:none;}
+.card{width:var(--cw);height:var(--ch);display:block;border-radius:14px;cursor:grab;touch-action:none;transform:perspective(1000px) rotateY(-5deg) rotateX(3deg);transition:transform 0.55s cubic-bezier(0.23,1,0.32,1),box-shadow 0.55s ease;flex-shrink:0;user-select:none;}
 .card:hover{transform:perspective(1000px) rotateY(0) rotateX(0) scale(1.05);}
-
-/* ── FOPPS CHROME ── */
+.card.drag{cursor:grabbing;}
 .fopps{box-shadow:0 28px 80px rgba(0,0,0,0.75),0 0 0 1px rgba(255,255,255,0.1);}
 .fopps:hover{box-shadow:0 40px 100px rgba(0,0,0,0.85),0 0 0 2px rgba(255,255,255,0.22),0 0 40px rgba(255,255,255,0.04);}
-.t-stock{position:absolute;inset:0;background:#f2ede2;}
-.t-foil{position:absolute;inset:0;z-index:30;pointer-events:none;
-  background:linear-gradient(108deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.6) 16%,rgba(200,220,255,0.18) 26%,rgba(255,255,255,0) 36%,rgba(255,210,80,0.12) 50%,rgba(255,255,255,0) 64%,rgba(210,255,210,0.1) 74%,rgba(255,255,255,0.38) 85%,rgba(255,255,255,0) 100%);
-  mix-blend-mode:screen;}
-.t-refract{position:absolute;inset:0;z-index:5;pointer-events:none;
-  background:repeating-linear-gradient(70deg,transparent 0px,transparent 2px,rgba(160,120,30,0.035) 2px,rgba(160,120,30,0.035) 4px);}
-.t-topbar{position:absolute;top:0;left:0;right:0;height:7px;z-index:20;}
-.t-photo{position:absolute;top:7px;left:0;right:0;height:263px;overflow:hidden;z-index:6;}
-.t-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
-.card-scene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:1;}
-.card-selfie{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:2;-webkit-mask-image:radial-gradient(ellipse 64% 72% at 50% 40%,black 35%,rgba(0,0,0,0.85) 52%,rgba(0,0,0,0.3) 68%,transparent 85%);mask-image:radial-gradient(ellipse 64% 72% at 50% 40%,black 35%,rgba(0,0,0,0.85) 52%,rgba(0,0,0,0.3) 68%,transparent 85%);}
-.t-pfade{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,rgba(242,237,226,0.88) 70%,rgba(242,237,226,1) 100%);z-index:7;}
-.t-yr-badge{position:absolute;top:13px;left:9px;z-index:25;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);border-radius:2px;padding:2px 6px;}
-.t-yr{font-family:'Oswald',sans-serif;font-size:0.62rem;font-weight:700;color:#fff;letter-spacing:0.5px;display:block;line-height:1.15;}
-.t-set{font-family:'Barlow Condensed',sans-serif;font-size:0.43rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);display:block;}
-.t-flag{position:absolute;top:13px;right:0;z-index:25;background:linear-gradient(135deg,#a87a0a,#edbe3a);color:#000;font-family:'Oswald',sans-serif;font-size:0.5rem;font-weight:700;letter-spacing:1.5px;padding:3px 10px 3px 13px;clip-path:polygon(11% 0,100% 0,100% 100%,11% 100%,0 50%);}
-.t-body{position:absolute;bottom:0;left:0;right:0;padding:6px 10px 7px;z-index:15;background:linear-gradient(180deg,rgba(242,237,226,0) 0%,#f2ede2 16%);}
-.t-cbar{height:3px;border-radius:2px;margin-bottom:6px;}
-.t-name{font-family:'Oswald',sans-serif;font-size:1.45rem;font-weight:700;color:#0c0c10;letter-spacing:0.5px;line-height:1;margin-bottom:2px;}
-.t-subrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.t-pos{font-family:'Barlow Condensed',sans-serif;font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:#555;font-weight:600;}
-.t-team{font-family:'Oswald',sans-serif;font-size:0.6rem;letter-spacing:1.5px;font-weight:700;}
-.t-stats{display:flex;border-top:1px solid rgba(0,0,0,0.09);padding-top:5px;}
-.t-stat{flex:1;text-align:center;border-right:1px solid rgba(0,0,0,0.07);}
-.t-stat:last-child{border-right:none;}
-.t-sv{font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;color:#0c0c10;display:block;line-height:1;}
-.t-sk{font-family:'Barlow Condensed',sans-serif;font-size:0.44rem;letter-spacing:2px;text-transform:uppercase;color:#888;display:block;margin-top:1px;}
-.t-foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
-.t-num{font-family:'Barlow Condensed',sans-serif;font-size:0.5rem;color:rgba(0,0,0,0.28);letter-spacing:1px;}
-.t-lgbox{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid rgba(0,0,0,0.1);}
-.t-lgbox span{font-family:'Oswald',sans-serif;font-size:0.48rem;font-weight:700;}
-
-/* ── FOWMAN ── */
 .fowman{box-shadow:0 28px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(0,200,150,0.15);}
 .fowman:hover{box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 0 2px rgba(0,210,155,0.45),0 0 50px rgba(0,170,120,0.15);}
-.b-bg{position:absolute;inset:0;background:linear-gradient(165deg,#0d1824 0%,#060e18 45%,#060b10 100%);}
-.b-tex{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(-48deg,transparent,transparent 3px,rgba(0,200,150,0.018) 3px,rgba(0,200,150,0.018) 4px);}
-.b-foil{position:absolute;inset:0;z-index:30;pointer-events:none;background:linear-gradient(112deg,transparent 0%,rgba(0,255,180,0.07) 22%,transparent 42%,rgba(80,210,255,0.05) 56%,transparent 72%,rgba(0,200,150,0.06) 86%,transparent 100%);mix-blend-mode:screen;}
-.b-photo{position:absolute;inset:0;z-index:4;}
-.b-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:contrast(1.05) saturate(1.08);}
-.b-vig{position:absolute;inset:0;z-index:5;background:radial-gradient(ellipse at 50% 22%,transparent 28%,rgba(5,10,16,0.52) 100%);}
-.b-fade{position:absolute;bottom:0;left:0;right:0;height:205px;z-index:6;background:linear-gradient(transparent,rgba(6,14,24,0.97) 52%,rgba(5,10,16,1) 100%);}
-.b-tbadge{position:absolute;top:13px;left:11px;z-index:25;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);border:1px solid rgba(0,200,150,0.18);border-radius:2px;padding:3px 8px;}
-.b-tby{font-family:'Oswald',sans-serif;font-size:0.58rem;font-weight:700;color:#fff;letter-spacing:1px;display:block;line-height:1.1;}
-.b-tbs{font-family:'Barlow Condensed',sans-serif;font-size:0.43rem;letter-spacing:2px;text-transform:uppercase;color:rgba(0,220,160,0.7);display:block;}
-.b-tbr{position:absolute;top:13px;right:11px;z-index:25;background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.28);border-radius:2px;padding:3px 8px;font-family:'Oswald',sans-serif;font-size:0.5rem;letter-spacing:2px;color:rgba(0,225,160,0.88);}
-.b-body{position:absolute;bottom:0;left:0;right:0;padding:9px 12px 9px;z-index:10;}
-.b-acc{height:2px;background:linear-gradient(90deg,rgba(0,200,150,0.8),rgba(0,200,150,0.15),transparent);margin-bottom:7px;border-radius:1px;}
-.b-name{font-family:'Oswald',sans-serif;font-size:1.45rem;font-weight:700;color:#fff;letter-spacing:1px;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.5);}
-.b-sub{display:flex;justify-content:space-between;align-items:center;margin-top:3px;margin-bottom:7px;}
-.b-pos{font-family:'Barlow Condensed',sans-serif;font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:rgba(0,210,155,0.85);}
-.b-team{font-family:'Oswald',sans-serif;font-size:0.58rem;letter-spacing:2px;color:rgba(255,255,255,0.38);}
-.b-stats{display:flex;gap:12px;}
-.b-sv{font-family:'Teko',sans-serif;font-size:1.35rem;font-weight:500;color:#fff;display:block;line-height:1;}
-.b-sk{font-family:'Barlow Condensed',sans-serif;font-size:0.44rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(0,200,150,0.58);display:block;}
-.b-foot{display:flex;justify-content:space-between;margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.05);}
-.b-cn{font-family:'Barlow Condensed',sans-serif;font-size:0.48rem;color:rgba(255,255,255,0.18);letter-spacing:1px;}
-.b-lg{font-family:'Oswald',sans-serif;font-size:0.48rem;letter-spacing:1px;color:rgba(0,210,155,0.45);}
-
-/* ── FRIZIM ── */
 .frizim{box-shadow:0 28px 80px rgba(0,0,0,0.85),0 0 0 1px rgba(140,70,255,0.22);}
 .frizim:hover{box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 0 2px rgba(170,90,255,0.55),0 0 65px rgba(130,55,255,0.22);}
-.p-bg{position:absolute;inset:0;background:linear-gradient(168deg,#080410 0%,#0a0618 30%,#060310 60%,#040208 100%);}
-.p-prism{position:absolute;inset:0;z-index:30;pointer-events:none;background:conic-gradient(from 195deg at 55% 32%,rgba(255,50,150,0.065),rgba(255,130,30,0.055),rgba(255,240,30,0.055),rgba(30,240,120,0.055),rgba(30,155,255,0.065),rgba(155,30,255,0.065),rgba(255,30,200,0.055),rgba(255,50,150,0.045));mix-blend-mode:screen;}
-.p-lines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(-33deg,transparent,transparent 4px,rgba(140,70,255,0.022) 4px,rgba(140,70,255,0.022) 5px);}
-.p-photo{position:absolute;inset:0;z-index:4;}
-.p-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:contrast(1.1) saturate(1.18);}
-.p-vig{position:absolute;inset:0;z-index:5;background:radial-gradient(ellipse at 50% 18%,transparent 22%,rgba(4,2,12,0.58) 100%);}
-.p-fade{position:absolute;bottom:0;left:0;right:0;height:225px;z-index:6;background:linear-gradient(transparent,rgba(6,3,14,0.98) 52%,rgba(4,2,10,1) 100%);}
-.p-edge{position:absolute;inset:0;z-index:31;pointer-events:none;border-radius:14px;box-shadow:inset 0 0 0 1.5px rgba(140,70,255,0.2),inset 0 0 22px rgba(140,70,255,0.04);}
-.p-sl{position:absolute;top:0;left:11px;bottom:0;width:2.5px;z-index:20;background:linear-gradient(180deg,transparent,rgba(140,70,255,0.55) 22%,rgba(255,180,50,0.38) 50%,rgba(70,190,255,0.55) 78%,transparent);}
-.p-sr{position:absolute;top:0;right:11px;bottom:0;width:2.5px;z-index:20;background:linear-gradient(180deg,transparent,rgba(70,190,255,0.48) 22%,rgba(255,90,200,0.38) 50%,rgba(140,70,255,0.48) 78%,transparent);}
-.p-tl{position:absolute;top:13px;left:13px;z-index:25;}
-.p-tl-lg{font-family:'Anton',sans-serif;font-size:0.7rem;letter-spacing:1.5px;color:rgba(160,100,255,0.9);display:block;text-shadow:0 0 12px rgba(140,70,255,0.45);}
-.p-tl-yr{font-family:'Barlow Condensed',sans-serif;font-size:0.46rem;letter-spacing:2px;color:rgba(255,255,255,0.28);display:block;margin-top:2px;}
-.p-tr{position:absolute;top:13px;right:13px;z-index:25;background:linear-gradient(135deg,rgba(140,70,255,0.22),rgba(70,180,255,0.14));border:1px solid rgba(140,70,255,0.38);border-radius:2px;padding:4px 8px;backdrop-filter:blur(4px);}
-.p-trt{font-family:'Oswald',sans-serif;font-size:0.5rem;letter-spacing:2px;background:linear-gradient(90deg,#c87fff,#60c8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.p-body{position:absolute;bottom:0;left:0;right:0;padding:9px 13px 9px;z-index:12;}
-.p-cline{height:2px;background:linear-gradient(90deg,transparent,rgba(140,70,255,0.7) 18%,rgba(255,200,50,0.5) 50%,rgba(70,190,255,0.7) 82%,transparent);margin-bottom:7px;border-radius:1px;}
-.p-name{font-family:'Anton',sans-serif;font-size:1.42rem;letter-spacing:2px;color:#fff;line-height:1;text-shadow:0 0 28px rgba(140,70,255,0.4);}
-.p-sub{display:flex;justify-content:space-between;align-items:center;margin-top:2px;margin-bottom:8px;}
-.p-pos{font-family:'Oswald',sans-serif;font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(90deg,rgba(175,95,255,0.9),rgba(90,175,255,0.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.p-team{font-family:'Oswald',sans-serif;font-size:0.58rem;letter-spacing:2px;color:rgba(255,255,255,0.28);}
-.p-stats{display:flex;border-top:1px solid rgba(140,70,255,0.14);padding-top:7px;}
-.p-stat{flex:1;text-align:center;}
-.p-sv{font-family:'Teko',sans-serif;font-size:1.28rem;font-weight:500;color:#fff;display:block;line-height:1;}
-.p-sk{font-family:'Barlow Condensed',sans-serif;font-size:0.44rem;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,rgba(175,95,255,0.58),rgba(90,175,255,0.58));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;margin-top:1px;}
-.p-foot{display:flex;justify-content:space-between;margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.04);}
-.p-num{font-family:'Barlow Condensed',sans-serif;font-size:0.48rem;color:rgba(255,255,255,0.14);letter-spacing:1px;}
-.p-serial{font-family:'Oswald',sans-serif;font-size:0.5rem;letter-spacing:1px;background:linear-gradient(90deg,rgba(255,175,55,0.7),rgba(255,135,35,0.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 
-/* img generating overlay */
-.gen-ovl{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:rgba(10,8,18,0.88);backdrop-filter:blur(10px);border-radius:14px;transition:opacity 0.4s;}
-.gen-ovl.hide{opacity:0;pointer-events:none;}
-.gen-bar-wrap{width:55%;height:2px;background:rgba(255,255,255,0.07);border-radius:1px;overflow:hidden;}
-.gen-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));width:0;transition:width 0.4s ease;border-radius:1px;}
-.gen-ovl-lbl{font-family:'Oswald',sans-serif;font-size:0.68rem;letter-spacing:3px;color:var(--gold2);}
+/* photo controls */
+.pctl{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);}
+.pctl label{display:flex;align-items:center;gap:7px;cursor:pointer;}
+.pctl input[type=range]{width:110px;accent-color:var(--gold);}
+.pctl input[type=checkbox]{accent-color:var(--gold);}
+.pctl input:disabled+span{opacity:0.4;}
+.pctl-hint{font-size:0.68rem;color:var(--muted);margin-top:-8px;}
+.scene-msg{max-width:340px;display:flex;align-items:center;gap:10px;font-size:0.74rem;color:#f0a79e;line-height:1.45;padding:8px 12px;border:1px solid rgba(231,76,60,0.35);border-radius:3px;background:rgba(231,76,60,0.06);}
+.scene-msg button{flex-shrink:0;}
 
 /* actions */
 .cacts{display:flex;gap:7px;}
@@ -330,7 +246,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
           <p class="dz-sub">Any photo or portrait · PNG JPG WEBP · Max 10MB</p>
           <p class="dz-sub" style="opacity:.55;margin-top:4px;font-size:.7rem">🔒 100% private — your photo stays in your browser</p>
         </div>
-        <div class="pvw" id="pvw"><img id="pvwImg" src="" alt=""><div class="pvw-bar"><span class="pvw-ok">✓ Ready</span><button class="btn-chg" id="btnChg">Change</button></div></div>
+        <div class="pvw" id="pvw"><img id="pvwImg" src="" alt=""><div class="pvw-bar"><span class="pvw-ok" id="pvwOk">✓ Ready</span><button class="btn-chg" id="btnChg">Change</button></div></div>
       </div>
     </div>
 
@@ -424,55 +340,15 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
 
     <div class="result" id="stResult">
 
-      <!-- FOPPS -->
-      <div class="card fopps" id="cFopps" style="display:none">
-        <div class="t-stock"></div><div class="t-refract"></div><div class="t-foil"></div>
-        <div class="t-topbar" id="tTopbar"></div>
-        <div class="t-photo"><img class="card-scene" id="tScene" src="" alt=""><img class="card-selfie" id="tSelfie" src="" alt=""><div class="t-pfade"></div></div>
-        <div class="t-yr-badge"><span class="t-yr">2026</span><span class="t-set">FOPPS CHROME</span></div>
-        <div class="t-flag" id="tEd">ROOKIE CARD</div>
-        <div class="t-body">
-          <div class="t-cbar" id="tCbar"></div>
-          <div class="t-name" id="tName">NAME</div>
-          <div class="t-subrow"><span class="t-pos" id="tPos">POS</span><span class="t-team" id="tTeam">TEAM</span></div>
-          <div class="t-stats" id="tStats"></div>
-          <div class="t-foot"><span class="t-num" id="tNum">#001/999</span><div class="t-lgbox"><span id="tLg">NFL</span></div></div>
-        </div>
-        <div class="gen-ovl hide" id="tOvl"><div class="gen-ovl-lbl">GENERATING SCENE…</div><div class="gen-bar-wrap"><div class="gen-bar" id="tGbar"></div></div></div>
-      </div>
+      <canvas class="card fopps" id="cardCv" width="600" height="840"></canvas>
 
-      <!-- FOWMAN -->
-      <div class="card fowman" id="cFowman" style="display:none">
-        <div class="b-bg"></div><div class="b-tex"></div><div class="b-foil"></div>
-        <div class="b-photo"><img class="card-scene" id="bScene" src="" alt=""><img class="card-selfie" id="bSelfie" src="" alt=""><div class="b-vig"></div><div class="b-fade"></div></div>
-        <div class="b-tbadge"><span class="b-tby">2026</span><span class="b-tbs">FOWMAN CHROME</span></div>
-        <div class="b-tbr" id="bEd">PROSPECT</div>
-        <div class="b-body">
-          <div class="b-acc"></div>
-          <div class="b-name" id="bName">NAME</div>
-          <div class="b-sub"><span class="b-pos" id="bPos">POS</span><span class="b-team" id="bTeam">TEAM</span></div>
-          <div class="b-stats" id="bStats"></div>
-          <div class="b-foot"><span class="b-cn" id="bNum">#001/999</span><span class="b-lg" id="bLg">MLB</span></div>
-        </div>
-        <div class="gen-ovl hide" id="bOvl"><div class="gen-ovl-lbl">GENERATING SCENE…</div><div class="gen-bar-wrap"><div class="gen-bar" id="bGbar"></div></div></div>
+      <div class="pctl">
+        <label>Zoom <input type="range" id="zoomIn" min="50" max="300" value="100"></label>
+        <label><input type="checkbox" id="cutTgl" checked><span>Remove background</span></label>
+        <button class="btn-chg" id="btnFit">Reset</button>
       </div>
-
-      <!-- FRIZIM -->
-      <div class="card frizim" id="cFrizim" style="display:none">
-        <div class="p-bg"></div><div class="p-lines"></div><div class="p-prism"></div>
-        <div class="p-photo"><img class="card-scene" id="pScene" src="" alt=""><img class="card-selfie" id="pSelfie" src="" alt=""><div class="p-vig"></div><div class="p-fade"></div></div>
-        <div class="p-edge"></div><div class="p-sl"></div><div class="p-sr"></div>
-        <div class="p-tl"><span class="p-tl-lg" id="pLg">NBA</span><span class="p-tl-yr">2026 FRIZIM</span></div>
-        <div class="p-tr"><span class="p-trt" id="pEd">FRIZIM</span></div>
-        <div class="p-body">
-          <div class="p-cline"></div>
-          <div class="p-name" id="pName">NAME</div>
-          <div class="p-sub"><span class="p-pos" id="pPos">POS</span><span class="p-team" id="pTeam">TEAM</span></div>
-          <div class="p-stats" id="pStats"></div>
-          <div class="p-foot"><span class="p-num" id="pNum">#001</span><span class="p-serial" id="pSerial">01/25</span></div>
-        </div>
-        <div class="gen-ovl hide" id="pOvl"><div class="gen-ovl-lbl">GENERATING SCENE…</div><div class="gen-bar-wrap"><div class="gen-bar" id="pGbar"></div></div></div>
-      </div>
+      <div class="pctl-hint">Drag the card to reposition your photo · scroll to zoom</div>
+      <div class="scene-msg" id="sceneMsg" style="display:none"><span id="sceneMsgTxt"></span><button class="btn-chg" id="btnRetryScene">Try again</button></div>
 
       <div class="cacts">
         <button class="btn-act hi" id="btnDl"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save</button>
@@ -521,7 +397,6 @@ footer{position:relative;z-index:5;text-align:center;padding:22px;border-top:1px
 
 <footer>© 2026 CardForge AI · AI scenes by Puter.js + FLUX · Original card designs — not affiliated with any trading card company</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://js.puter.com/v2/"></script>
 <script>
 /* ── CONSTANTS ── */
@@ -561,63 +436,76 @@ const SCENES={
   Softball:[{id:'swing',ic:'🥎',nm:'Big swing'},{id:'pitch',ic:'💪',nm:'Windmill pitch'},{id:'field',ic:'🧤',nm:'Making a play'},{id:'slide',ic:'💨',nm:'Sliding in'}]
 };
 
-// Scene → detailed image generation prompt
+// Backgrounds are empty venues: the uploaded photo supplies the player, so the
+// prompt must never describe an athlete.
+const VENUES={
+  Football:'Empty professional American football stadium at night, floodlights blazing, light haze over the turf',
+  Baseball:'Empty major league baseball ballpark at night, floodlights glowing, freshly cut grass',
+  Basketball:'Empty professional basketball arena, polished hardwood court, bright arena lights',
+  Hockey:'Empty professional ice hockey arena, fresh glossy ice, bright arena lights',
+  Soccer:'Empty professional soccer stadium at night, floodlights, immaculate striped grass pitch',
+  Tennis:'Empty professional tennis stadium',
+  Golf:'Deserted championship golf course, lush manicured grass',
+  Boxing:'Empty professional boxing ring in a dark arena, overhead spotlights, haze',
+  Softball:'Empty softball stadium at night, floodlights, groomed dirt infield'
+};
 const SCENE_PROMPTS={
   Football:{
-    throw:"A professional NFL quarterback dropping back in the pocket, winding up to throw a deep pass, stadium lights blazing, crowd roaring in the background, dynamic motion blur on the arm",
-    run:"A professional NFL running back exploding through a gap, breaking tackles, full sprint, low camera angle, stadium lights, game action photography",
-    catch:"A professional NFL wide receiver making a spectacular leaping catch at full extension, hands outstretched, stadium crowd visible behind",
-    celebrate:"A professional NFL player celebrating a touchdown, spiking the football, arms raised triumphantly, end zone, confetti, teammates rushing in"
+    throw:'view from the pocket at midfield looking downfield toward the far end zone',
+    run:'low field-level view along the hash marks, turf stretching ahead',
+    catch:'view from the sideline beside the end zone corner pylon',
+    celebrate:'view from inside the end zone facing the goalposts, confetti drifting in the air'
   },
   Baseball:{
-    swing:"A professional MLB batter making contact on a massive home run swing, full follow-through, ball just leaving the bat, stadium lights at night",
-    pitch:"A professional MLB pitcher mid-windup on the mound, dynamic pitching motion, focus and intensity, stadium crowd behind",
-    field:"A professional MLB outfielder making a diving catch, fully extended horizontal in midair, bright green outfield grass",
-    slide:"A professional MLB baserunner sliding feet-first into home plate, dust cloud, catcher awaiting the throw, intense game action"
+    swing:'view from home plate looking over the infield to the outfield wall',
+    pitch:"view from behind the pitcher's mound toward home plate and the backstop",
+    field:'view across the deep outfield grass to the warning track and wall',
+    slide:'low ground-level view of home plate and the dirt baseline, dust hanging in the air'
   },
   Basketball:{
-    dunk:"A professional NBA player soaring for a powerful slam dunk, elevated above the rim, hand on the ball, arena crowd erupting",
-    shoot:"A professional NBA player elevating for a mid-range jump shot, perfect form, defender below, arena lights",
-    drive:"A professional NBA player driving hard through the lane, splitting defenders, explosive first step, arena",
-    defend:"A professional NBA player in intense full defensive stance, hands active, one-on-one coverage, arena"
+    dunk:'low view from under the basket looking up at the rim and backboard',
+    shoot:'view from the wing at the three-point line toward the hoop',
+    drive:'view down the lane from the top of the key toward the basket',
+    defend:'floor-level view at half court across the hardwood'
   },
   Hockey:{
-    shot:"A professional NHL player unleashing a powerful wrist shot, stick follow-through, ice spray, arena lights",
-    skate:"A professional NHL player skating at full speed, leaning into a turn, ice spray, arena, dynamic blur",
-    celebrate:"A professional NHL player celebrating a goal, arms raised, teammates piling on, ice arena crowd going wild",
-    goalie:"A professional NHL goalie making a spectacular glove save, body fully extended, puck visible near glove, arena"
+    shot:'view from the slot toward the goal net',
+    skate:'low view along the boards down the length of the ice',
+    celebrate:'view from behind the goal toward center ice, spotlights sweeping',
+    goalie:'close view of the goal crease and net'
   },
   Soccer:{
-    goal:"A professional soccer player blasting a shot into the top corner of the net, powerful follow-through, stadium",
-    dribble:"A professional soccer player dribbling at high speed past a defender, dynamic motion, stadium pitch",
-    header:"A professional soccer player rising above defenders to head the ball, perfect elevation, stadium",
-    freekick:"A professional soccer player striking a free kick with precision and power, wall of defenders, stadium"
+    goal:'view from the penalty area toward the goal and net',
+    dribble:'low view along the touchline down the pitch',
+    header:'view from the six-yard box looking up at the crossbar and floodlights',
+    freekick:'view from twenty-five yards out facing the goal'
   },
   Tennis:{
-    serve:"A professional tennis player in mid-serve, racket fully extended overhead, ball just struck, hard court, arena crowd",
-    backhand:"A professional tennis player unleashing a powerful two-handed backhand, full rotation, clay court",
-    volley:"A professional tennis player at the net, punching a crisp volley, athletic reach, arena",
-    win:"A professional tennis player celebrating match point, falling to knees in joy, arms wide, grand slam arena"
+    serve:'blue hard court, view from behind the baseline down the court to the net',
+    backhand:'red clay court, low view from the baseline corner',
+    volley:'hard court, close view at the net looking across the court',
+    win:'grass center court of a grand slam stadium, late afternoon sun'
   },
   Golf:{
-    drive:"A professional PGA golfer completing a powerful tee shot, perfect swing follow-through, golf course fairway, blue sky",
-    putt:"A professional PGA golfer in focused putting stance, reading the green, late afternoon light, golf course",
-    approach:"A professional PGA golfer hitting a crisp iron approach shot, divot, ball in flight, lush fairway",
-    celebrate:"A professional PGA golfer celebrating a hole-in-one, fist pump, crowd cheering on the green, golf course"
+    drive:'view from the tee box down a tree-lined fairway, blue sky',
+    putt:'low view across the putting green toward the flagstick, late afternoon light',
+    approach:'view from the fairway toward an elevated green guarded by bunkers',
+    celebrate:'view of the eighteenth green beside empty grandstands, golden hour'
   },
   Boxing:{
-    punch:"A professional boxer throwing a devastating straight right hand, full extension, sweat flying, boxing ring lights",
-    combo:"A professional boxer throwing a sharp combination, blurred fists, determined expression, boxing ring",
-    victory:"A professional boxer celebrating a victory, arms raised by the referee, arena crowd cheering, championship belt",
-    slip:"A professional boxer slipping a punch with defensive brilliance, counter-punching, boxing ring, crowd"
+    punch:'view from inside the ring toward the ropes and corner post',
+    combo:'low canvas-level view across the ring',
+    victory:'view from center ring looking up into the spotlights, confetti falling',
+    slip:'view from a neutral corner across the ring'
   },
   Softball:{
-    swing:"A professional softball player crushing a powerful swing, bat making contact, ball rocketing off, stadium lights at night, fast-pitch game action",
-    pitch:"A professional softball pitcher in full windmill delivery, explosive release, dirt circle mound, stadium crowd behind",
-    field:"A professional softball player making a diving catch in the outfield, fully extended, bright green grass, stadium lights",
-    slide:"A professional softball player sliding feet-first into home plate, dust cloud erupting, catcher blocking the plate, intense game action"
+    swing:'view from home plate toward the outfield fence',
+    pitch:'view from behind the pitching circle toward home plate',
+    field:'view across the outfield grass to the fence',
+    slide:'low ground-level view of home plate and the dirt baseline, dust in the air'
   }
 };
+const SCENE_SUFFIX='deserted and unoccupied, stands softly out of focus, background plate for a sports portrait, cinematic lighting, photorealistic, vertical portrait orientation';
 
 let imgData=null, selSport='Football', selStyle='fopps', selScene='throw', busy=false;
 
@@ -676,7 +564,7 @@ function resetUpload(){pvw.style.display='none';dz.style.display='block';imgData
 function loadFile(f){
   if(f.size>10*1024*1024){alert('Max 10MB');return;}
   const r=new FileReader();
-  r.onload=e=>{imgData=e.target.result;pvwImg.src=imgData;dz.style.display='none';pvw.style.display='block';document.getElementById('btnGen').disabled=false;};
+  r.onload=e=>{imgData=e.target.result;pvwImg.src=imgData;dz.style.display='none';pvw.style.display='block';document.getElementById('btnGen').disabled=false;subjReady=prepSubject(imgData).catch(err=>console.warn('Photo prep failed:',err));};
   r.readAsDataURL(f);
 }
 
@@ -696,37 +584,6 @@ document.getElementById('printModalClose').addEventListener('click',()=>{documen
 document.getElementById('printModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget)e.currentTarget.style.display='none';});
 document.getElementById('btnPrintHQ').addEventListener('click', downloadPrintFile);
 
-async function downloadPrintFile(){
-  const cardId={fopps:'cFopps',fowman:'cFowman',frizim:'cFrizim'}[selStyle];
-  const card=document.getElementById(cardId);
-  const btn=document.getElementById('btnPrintHQ');
-  if(!card||card.style.display==='none'){alert('Generate a card first!');return;}
-  btn.textContent='Rendering 300 DPI…';btn.disabled=true;
-
-  const sceneId={fopps:'tScene',fowman:'bScene',frizim:'pScene'}[selStyle];
-  const sceneEl=document.getElementById(sceneId);
-  if(sceneEl&&sceneEl.src&&!sceneEl.complete){
-    btn.textContent='Waiting for scene…';
-    await new Promise(res=>{const t=setTimeout(res,30000);sceneEl.addEventListener('load',()=>{clearTimeout(t);res();},{once:true});sceneEl.addEventListener('error',()=>{clearTimeout(t);res();},{once:true});});
-  }
-
-  try{
-    const canvas=await html2canvas(card,{
-      scale:4,
-      backgroundColor:null,useCORS:true,allowTaint:false,logging:false,
-      onclone:(clonedDoc)=>{const el=clonedDoc.getElementById(cardId);el.style.transform='none';el.style.transition='none';el.style.animation='none';el.style.boxShadow='none';}
-    });
-    const link=document.createElement('a');
-    link.download='cardforge-print-'+selStyle+'-'+Date.now()+'.png';
-    link.href=canvas.toDataURL('image/png');
-    link.click();
-  }catch(e){
-    console.error('Print export error:',e);
-    alert('Export failed — try the regular Save button instead.');
-  }finally{
-    btn.textContent='Download Print File (300 DPI)';btn.disabled=false;
-  }
-}
 
 /* ── CANVAS FALLBACK SCENE GENERATOR ── */
 function generateSceneBg(sport, scene, c1, c2){
@@ -851,37 +708,64 @@ function generateSceneBg(sport, scene, c1, c2){
   if(c1){ cx.fillStyle=c1; cx.globalAlpha=0.1; cx.fillRect(0,0,W,H); cx.globalAlpha=1; }
   if(c2){ cx.fillStyle=c2; cx.globalAlpha=0.06; cx.fillRect(0,H*0.5,W,H*0.5); cx.globalAlpha=1; }
 
-  return cv.toDataURL('image/jpeg',0.9);
+  return cv;
 }
 
 /* ── AI SCENE GENERATION (Puter.js + FLUX) ── */
-function loadAIScene(sport, scene){
-  if(typeof puter==='undefined'||!puter.ai){
-    console.warn('Puter.js not available');
-    setStatus('ok','AI Ready');
-    return;
-  }
+const ai={tok:0,img:null,pending:0};
+let genTok=0;
 
-  const prompt=(SCENE_PROMPTS[sport]&&SCENE_PROMPTS[sport][scene])||
-    'Professional '+sport+' action, '+scene+', stadium lighting';
-  const bgPrompt=prompt+', wide angle stadium background, dramatic cinematic lighting, no people visible, no faces, sports venue background only, photorealistic';
+function errText(e){
+  const m=e&&((e.error&&(e.error.message||e.error.code))||e.message)||e;
+  return String(typeof m==='string'?m:JSON.stringify(m)).slice(0,140);
+}
 
-  const sceneIds=['tScene','bScene','pScene'];
+function sceneFail(tok,why){
+  if(tok!==genTok) return;
+  ai.pending=0;
+  console.warn('AI scene generation failed:',why);
+  setStatus('err','AI scene failed');
+  document.getElementById('sceneMsgTxt').textContent='AI background unavailable — showing the built-in backdrop instead. ('+why+')';
+  document.getElementById('sceneMsg').style.display='flex';
+}
 
-  puter.ai.txt2img(bgPrompt,{model:'black-forest-labs/FLUX.1-schnell'})
-    .then(imgEl=>{
-      console.log('AI scene generated via Puter.js FLUX');
-      const src=imgEl.src;
-      sceneIds.forEach(id=>{
-        const el=document.getElementById(id);
-        if(el) el.src=src;
-      });
+// Must be called synchronously from the click handler so Puter's sign-in popup isn't blocked
+function loadAIScene(sport, scene, tok){
+  document.getElementById('sceneMsg').style.display='none';
+  ai.pending=tok;
+  if(typeof puter==='undefined'||!puter.ai){sceneFail(tok,'image service failed to load');return;}
+
+  const angle=(SCENE_PROMPTS[sport]&&SCENE_PROMPTS[sport][scene])||'wide view of the playing surface';
+  const prompt=(VENUES[sport]||'Empty '+sport+' venue')+', '+angle+', '+SCENE_SUFFIX;
+
+  let done=false;
+  const fail=err=>{if(done)return;done=true;clearTimeout(timer);sceneFail(tok,errText(err));};
+  const timer=setTimeout(()=>fail('timed out after 60s'),60000);
+
+  let req;
+  try{req=puter.ai.txt2img(prompt,{model:'black-forest-labs/FLUX.1-schnell'});}catch(e){fail(e);return;}
+  Promise.resolve(req).then(imgEl=>{
+    const src=imgEl&&imgEl.src;
+    if(!src){fail('empty response');return;}
+    // Reload with CORS so the card canvas stays exportable
+    const im=new Image();
+    if(!/^(data|blob):/.test(src)) im.crossOrigin='anonymous';
+    im.onload=()=>{
+      if(done)return; done=true; clearTimeout(timer);
+      if(tok!==genTok) return;
+      ai.tok=tok; ai.img=im; ai.pending=0;
       setStatus('ok','AI scene ready');
-    })
-    .catch(err=>{
-      console.warn('AI scene generation failed:',err);
-      setStatus('ok','AI Ready (fallback)');
-    });
+      queueRender();
+    };
+    im.onerror=()=>fail('image could not be loaded');
+    im.src=src;
+  }).catch(fail);
+}
+
+function sceneStatus(tok){
+  if(ai.pending===tok) setStatus('generating','Loading AI scene…');
+  else if(ai.tok===tok) setStatus('ok','AI scene ready');
+  else setStatus('err','AI scene failed');
 }
 
 /* ── AI STATS GENERATION (Pollinations.ai) ── */
@@ -933,57 +817,382 @@ async function fetchAIStats(sport, pos, scene, name, team){
 }
 
 
-/* ── CARD DOWNLOAD ── */
-async function downloadCard(){
-  const cardId={fopps:'cFopps',fowman:'cFowman',frizim:'cFrizim'}[selStyle];
-  const card=document.getElementById(cardId);
-  const btn=document.getElementById('btnDl');
+/* ── SUBJECT CUTOUT (MediaPipe segmentation, runs entirely in the browser) ── */
+const MP='https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+const SEG_MODEL='https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite';
+const subj={photo:null,cut:null,box:null,head:null,useCut:false};
+const view={x:0,y:0,z:1};
+let subjReady=Promise.resolve(), subjTok=0, segP=null;
 
-  // If AI scene is still loading, wait up to 30s for it
-  const sceneId={fopps:'tScene',fowman:'bScene',frizim:'pScene'}[selStyle];
-  const sceneEl=document.getElementById(sceneId);
-  if(sceneEl&&sceneEl.src&&!sceneEl.complete){
-    btn.textContent='Waiting for scene…';
-    await new Promise(res=>{
-      const t=setTimeout(res,30000);
-      sceneEl.addEventListener('load',()=>{clearTimeout(t);res();},{once:true});
-      sceneEl.addEventListener('error',()=>{clearTimeout(t);res();},{once:true});
+function mkCanvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
+function loadImg(src){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>rej(new Error('Image failed to load'));im.src=src;});}
+
+function getSegmenter(){
+  return segP||(segP=(async()=>{
+    const m=await import(MP+'/vision_bundle.mjs');
+    const fs=await m.FilesetResolver.forVisionTasks(MP+'/wasm');
+    return m.ImageSegmenter.createFromOptions(fs,{
+      baseOptions:{modelAssetPath:SEG_MODEL,delegate:'CPU'},
+      runningMode:'IMAGE',outputCategoryMask:false,outputConfidenceMasks:true
     });
+  })().catch(e=>{segP=null;throw e;}));
+}
+
+// Returns {cut,box,head} in photo pixels, or null when no person is found.
+// Mask channels: 0 background, 1 hair, 2 body skin, 3 face skin, 4 clothes, 5 accessories
+async function cutOut(photo){
+  const seg=await getSegmenter();
+  const k=Math.min(1,1024/Math.max(photo.width,photo.height));
+  const sm=mkCanvas(Math.round(photo.width*k),Math.round(photo.height*k));
+  sm.getContext('2d').drawImage(photo,0,0,sm.width,sm.height);
+
+  const res=seg.segment(sm);
+  const ms=res.confidenceMasks, mw=ms[0].width, mh=ms[0].height;
+  const bg=ms[0].getAsFloat32Array(), hair=ms[1].getAsFloat32Array(), face=ms[3].getAsFloat32Array();
+  const mc=mkCanvas(mw,mh), mx=mc.getContext('2d'), id=mx.createImageData(mw,mh), px=id.data;
+  let n=0,x0=mw,y0=mh,x1=-1,y1=-1, hn=0,hx0=mw,hy0=mh,hx1=-1,hy1=-1;
+  for(let y=0,i=0;y<mh;y++)for(let x=0;x<mw;x++,i++){
+    const p=1-bg[i];
+    px[i*4+3]=p<=0.3?0:p>=0.7?255:(p-0.3)/0.4*255;
+    if(p>0.5){n++;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+    if(hair[i]>0.5||face[i]>0.5){hn++;if(x<hx0)hx0=x;if(x>hx1)hx1=x;if(y<hy0)hy0=y;if(y>hy1)hy1=y;}
   }
+  res.close();
+  if(n<mw*mh*0.02) return null;
+  mx.putImageData(id,0,0);
 
-  btn.textContent='Exporting...';
-  btn.disabled=true;
+  const cut=mkCanvas(photo.width,photo.height), cx=cut.getContext('2d');
+  cx.drawImage(photo,0,0);
+  cx.globalCompositeOperation='destination-in';
+  cx.imageSmoothingQuality='high';
+  cx.drawImage(mc,0,0,cut.width,cut.height);
+
+  const sx=photo.width/mw, sy=photo.height/mh;
+  return{
+    cut,
+    box:{x:x0*sx,y:y0*sy,w:(x1-x0+1)*sx,h:(y1-y0+1)*sy},
+    head:hn>n*0.015?{x:hx0*sx,y:hy0*sy,w:(hx1-hx0+1)*sx,h:(hy1-hy0+1)*sy}:null
+  };
+}
+
+async function prepSubject(url){
+  const my=++subjTok;
+  const note=t=>{if(my===subjTok)document.getElementById('pvwOk').textContent=t;};
+  const im=await loadImg(url);
+  if(my!==subjTok) return;
+  const k=Math.min(1,1600/Math.max(im.naturalWidth,im.naturalHeight));
+  const photo=mkCanvas(Math.round(im.naturalWidth*k),Math.round(im.naturalHeight*k));
+  photo.getContext('2d').drawImage(im,0,0,photo.width,photo.height);
+  Object.assign(subj,{photo,cut:null,box:null,head:null,useCut:false});
+  Object.assign(view,{x:0,y:0,z:1});
+  syncCtl(); queueRender();
+  note('Removing background…');
   try{
-    const canvas=await html2canvas(card,{
-      scale:2,
-      backgroundColor:null,
-      useCORS:true,
-      allowTaint:false,
-      logging:false,
-      onclone:(clonedDoc)=>{
-        const el=clonedDoc.getElementById(cardId);
-        el.style.transform='none';
-        el.style.transition='none';
-        el.style.animation='none';
-        el.style.boxShadow='none';
-      }
-    });
-    const link=document.createElement('a');
-    link.download='cardforge-'+selStyle+'-'+Date.now()+'.png';
-    link.href=canvas.toDataURL('image/png');
-    link.click();
+    const r=await cutOut(photo);
+    if(my!==subjTok) return;
+    if(r){Object.assign(subj,r,{useCut:true});note('✓ Ready — background removed');}
+    else note('✓ Ready — no person found, using full photo');
   }catch(e){
-    console.error('Download error:',e);
-    alert('Export failed — try right-clicking the card and choosing "Save image as..."');
-  }finally{
-    btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save';
-    btn.disabled=false;
+    console.warn('Background removal unavailable:',e);
+    note('✓ Ready — background removal unavailable');
+  }
+  if(my!==subjTok) return;
+  syncCtl(); queueRender();
+}
+
+/* ── CARD RENDERER ──
+   The card is drawn straight to canvas in 300×420 units (2.5" × 3.5"), so the
+   preview and every export come from the same code. */
+const CW=300, CH=420;
+const OSW='Oswald', ANT='Anton', TEK='Teko', BCF='"Barlow Condensed"';
+const cardCv=document.getElementById('cardCv');
+const scratch=mkCanvas(1,1);
+let card=null, RS=2, rq=0;
+
+const fontsReady=Promise.all(['700 20px Oswald','400 20px Oswald','400 20px Anton','500 20px Teko','400 20px "Barlow Condensed"','600 20px "Barlow Condensed"']
+  .map(f=>document.fonts.load(f))).catch(()=>{});
+
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+// Linear gradient using the CSS angle convention (0deg = up, 90deg = right)
+function lgr(ctx,deg,x,y,w,h,stops){
+  const a=deg*Math.PI/180, dx=Math.sin(a), dy=-Math.cos(a);
+  const L=(Math.abs(w*dx)+Math.abs(h*dy))/2, cx=x+w/2, cy=y+h/2;
+  const g=ctx.createLinearGradient(cx-dx*L,cy-dy*L,cx+dx*L,cy+dy*L);
+  stops.forEach(([p,c])=>g.addColorStop(p,c));
+  return g;
+}
+function ellipseFill(ctx,cx,cy,rx,ry,stops){
+  ctx.save();ctx.translate(cx,cy);ctx.scale(1,ry/rx);
+  const g=ctx.createRadialGradient(0,0,0,0,0,rx);
+  stops.forEach(([p,c])=>g.addColorStop(p,c));
+  ctx.fillStyle=g;ctx.fillRect(-CW*2,-CH*2,CW*4,CH*4);ctx.restore();
+}
+function box(ctx,x,y,w,h,r,fill,stroke){
+  rr(ctx,x,y,w,h,r);
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}
+}
+function rule(ctx,x0,y0,x1,y1,color){ctx.strokeStyle=color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke();}
+function filt(ctx,f){if('filter' in ctx)ctx.filter=f;}
+function cover(ctx,img,x,y,w,h){
+  const iw=img.naturalWidth||img.width, ih=img.naturalHeight||img.height, s=Math.max(w/iw,h/ih);
+  ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+  ctx.drawImage(img,x+(w-iw*s)/2,y,iw*s,ih*s);
+  ctx.restore();
+}
+
+// Text options: f family, s size, w weight, ls letter-spacing, c color, g gradient colors,
+// a align, m (y is the vertical middle instead of the cap top), sh [color,blur,offsetY]
+function tw(ctx,str,o){
+  ctx.font=(o.w||400)+' '+o.s+'px '+o.f;
+  if(!o.ls) return ctx.measureText(str).width;
+  const ch=[...str];
+  return ch.reduce((a,c)=>a+ctx.measureText(c).width,0)+o.ls*Math.max(0,ch.length-1);
+}
+function T(ctx,str,x,y,o){
+  str=String(str);
+  const w=tw(ctx,str,o), cap=ctx.measureText('H').actualBoundingBoxAscent;
+  let sx=o.a==='right'?x-w:o.a==='center'?x-w/2:x;
+  const by=o.m?y+cap/2:y+cap;
+  ctx.save();ctx.textBaseline='alphabetic';ctx.textAlign='left';
+  if(o.g){const g=ctx.createLinearGradient(sx,0,sx+Math.max(w,1),0);o.g.forEach((c,i)=>g.addColorStop(i/(o.g.length-1),c));ctx.fillStyle=g;}
+  else ctx.fillStyle=o.c;
+  if(o.sh){ctx.shadowColor=o.sh[0];ctx.shadowBlur=o.sh[1]*RS;ctx.shadowOffsetY=(o.sh[2]||0)*RS;}
+  if(o.ls){for(const ch of str){ctx.fillText(ch,sx,by);sx+=ctx.measureText(ch).width+o.ls;}}
+  else ctx.fillText(str,sx,by);
+  ctx.restore();
+  return w;
+}
+function fitText(ctx,str,o,maxW){const p={...o};while(p.s>9&&tw(ctx,str,p)>maxW)p.s-=0.5;return p;}
+
+// Draws the uploaded photo into the area (ax,ay,aw,ah): the cutout framed on the
+// head when there is one, otherwise the whole photo behind a soft oval.
+function drawSubject(ctx,ax,ay,aw,ah){
+  if(!subj.photo) return;
+  if(subj.useCut&&subj.cut){
+    const b=subj.box, fit=Math.min(aw*0.92/b.w,ah*0.96/b.h);
+    let s=fit, anx=b.x+b.w/2, any=b.y+b.h, ty=ay+ah;
+    if(subj.head){
+      const h=subj.head;
+      s=Math.min(Math.max(ah*0.3/h.h,fit),fit*2.5);
+      anx=h.x+h.w/2; any=h.y; ty=ay+ah*0.1;
+    }
+    s*=view.z;
+    ctx.save();ctx.beginPath();ctx.rect(ax,ay,aw,ah);ctx.clip();
+    ctx.shadowColor='rgba(0,0,0,0.55)';ctx.shadowBlur=16*RS;ctx.shadowOffsetY=4*RS;
+    ctx.drawImage(subj.cut,ax+aw/2+view.x-anx*s,ty+view.y-any*s,subj.cut.width*s,subj.cut.height*s);
+    ctx.restore();
+  }else{
+    const p=subj.photo, W=Math.round(aw*RS), H=Math.round(ah*RS);
+    if(scratch.width!==W||scratch.height!==H){scratch.width=W;scratch.height=H;}
+    const sx=scratch.getContext('2d');
+    sx.setTransform(RS,0,0,RS,0,0);sx.globalCompositeOperation='source-over';sx.clearRect(0,0,aw,ah);
+    const s=Math.max(aw/p.width,ah/p.height)*view.z;
+    sx.drawImage(p,(aw-p.width*s)/2+view.x,view.y,p.width*s,p.height*s);
+    sx.globalCompositeOperation='destination-in';
+    sx.save();sx.translate(aw*0.5,ah*0.4);sx.scale(1,(ah*0.72)/(aw*0.64));
+    const g=sx.createRadialGradient(0,0,0,0,0,aw*0.64);
+    [[0,1],[0.35,1],[0.52,0.85],[0.68,0.3],[0.85,0],[1,0]].forEach(([q,a])=>g.addColorStop(q,'rgba(0,0,0,'+a+')'));
+    sx.fillStyle=g;sx.fillRect(-aw*4,-ah*4,aw*8,ah*8);sx.restore();
+    ctx.drawImage(scratch,ax,ay,aw,ah);
   }
 }
+
+function drawFopps(ctx,c,scene){
+  const STOCK='#f2ede2', INK='#0c0c10';
+  ctx.fillStyle=STOCK;ctx.fillRect(0,0,CW,CH);
+  ctx.fillStyle=lgr(ctx,90,0,0,CW,7,[[0,c.c1],[0.55,c.c1],[1,c.c2]]);ctx.fillRect(0,0,CW,7);
+  cover(ctx,scene,0,7,CW,268);
+  drawSubject(ctx,0,7,CW,268);
+  ctx.fillStyle=lgr(ctx,180,0,195,CW,80,[[0,'rgba(242,237,226,0)'],[0.7,'rgba(242,237,226,0.88)'],[1,STOCK]]);ctx.fillRect(0,195,CW,81);
+
+  const yr={f:OSW,w:700,s:10,ls:0.5,c:'#fff'}, st={f:BCF,s:7,ls:2,c:'rgba(255,255,255,0.5)'};
+  box(ctx,9,13,Math.max(tw(ctx,'2026',yr),tw(ctx,'FOPPS CHROME',st))+12,25,2,'rgba(0,0,0,0.8)');
+  T(ctx,'2026',15,17,yr); T(ctx,'FOPPS CHROME',15,29,st);
+
+  const ed={f:OSW,w:700,s:8,ls:1.5,c:'#000',m:true}, ew=tw(ctx,c.edition,ed)+23, ex=CW-ew;
+  ctx.beginPath();ctx.moveTo(ex+ew*0.11,13);ctx.lineTo(CW,13);ctx.lineTo(CW,29);ctx.lineTo(ex+ew*0.11,29);ctx.lineTo(ex,21);ctx.closePath();
+  ctx.fillStyle=lgr(ctx,135,ex,13,ew,16,[[0,'#a87a0a'],[1,'#edbe3a']]);ctx.fill();
+  T(ctx,c.edition,ex+13,21,ed);
+
+  box(ctx,10,303,280,3,1.5,lgr(ctx,90,10,303,280,3,[[0,c.c1],[1,c.c2]]));
+  T(ctx,c.name,10,313,fitText(ctx,c.name,{f:OSW,w:700,s:23,ls:0.5,c:INK},280));
+  T(ctx,c.position,10,339,{f:BCF,w:600,s:9,ls:3,c:'#555'});
+  T(ctx,c.team,290,338,{f:OSW,w:700,s:9.6,ls:1.5,c:c.c1,a:'right'});
+  rule(ctx,10,352.5,290,352.5,'rgba(0,0,0,0.09)');
+  const cw=280/3;
+  c.stats.forEach((s,i)=>{
+    const x=10+cw*(i+0.5);
+    T(ctx,s.value,x,359,fitText(ctx,s.value,{f:OSW,w:700,s:16,c:INK,a:'center'},cw-8));
+    T(ctx,s.label,x,377,{f:BCF,s:7,ls:2,c:'#888',a:'center'});
+    if(i) rule(ctx,10+cw*i,353,10+cw*i,384,'rgba(0,0,0,0.07)');
+  });
+  T(ctx,'#'+c.serial,10,401,{f:BCF,s:8,ls:1,c:'rgba(0,0,0,0.28)',m:true});
+  ctx.strokeStyle='rgba(0,0,0,0.1)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(278,401,12,0,Math.PI*2);ctx.stroke();
+  T(ctx,c.league,278,401,{f:OSW,w:700,s:7.7,c:c.c1,a:'center',m:true});
+
+  ctx.globalCompositeOperation='screen';
+  ctx.fillStyle=lgr(ctx,108,0,0,CW,CH,[[0,'rgba(255,255,255,0)'],[0.16,'rgba(255,255,255,0.6)'],[0.26,'rgba(200,220,255,0.18)'],[0.36,'rgba(255,255,255,0)'],[0.5,'rgba(255,210,80,0.12)'],[0.64,'rgba(255,255,255,0)'],[0.74,'rgba(210,255,210,0.1)'],[0.85,'rgba(255,255,255,0.38)'],[1,'rgba(255,255,255,0)']]);
+  ctx.fillRect(0,0,CW,CH);
+  ctx.globalCompositeOperation='source-over';
+}
+
+function drawFowman(ctx,c,scene){
+  const GRN='rgba(0,210,155,';
+  ctx.fillStyle=lgr(ctx,165,0,0,CW,CH,[[0,'#0d1824'],[0.45,'#060e18'],[1,'#060b10']]);ctx.fillRect(0,0,CW,CH);
+  filt(ctx,'contrast(1.05) saturate(1.08)');
+  cover(ctx,scene,0,0,CW,CH);
+  drawSubject(ctx,0,22,CW,300);
+  filt(ctx,'none');
+  ellipseFill(ctx,CW/2,CH*0.22,212,463,[[0,'rgba(5,10,16,0)'],[0.28,'rgba(5,10,16,0)'],[1,'rgba(5,10,16,0.52)']]);
+  ctx.fillStyle=lgr(ctx,180,0,211,CW,209,[[0,'rgba(6,14,24,0)'],[0.52,'rgba(6,14,24,0.97)'],[1,'rgba(5,10,16,1)']]);ctx.fillRect(0,211,CW,209);
+
+  const yr={f:OSW,w:700,s:9.3,ls:1,c:'#fff'}, st={f:BCF,s:7,ls:2,c:'rgba(0,220,160,0.7)'};
+  box(ctx,11,13,Math.max(tw(ctx,'2026',yr),tw(ctx,'FOWMAN CHROME',st))+16,26,2,'rgba(0,0,0,0.7)','rgba(0,200,150,0.18)');
+  T(ctx,'2026',19,18,yr); T(ctx,'FOWMAN CHROME',19,30,st);
+
+  const ed={f:OSW,s:8,ls:2,c:'rgba(0,225,160,0.88)',m:true}, ew=tw(ctx,c.edition,ed)+16, ex=CW-11-ew;
+  box(ctx,ex,13,ew,17,2,'rgba(0,0,0,0.45)');
+  box(ctx,ex,13,ew,17,2,'rgba(0,200,150,0.1)','rgba(0,200,150,0.28)');
+  T(ctx,c.edition,ex+8,21.5,ed);
+
+  ctx.fillStyle=lgr(ctx,90,12,320,276,2,[[0,'rgba(0,200,150,0.8)'],[0.5,'rgba(0,200,150,0.15)'],[1,'rgba(0,200,150,0)']]);ctx.fillRect(12,320,276,2);
+  T(ctx,c.name,12,329,fitText(ctx,c.name,{f:OSW,w:700,s:23,ls:1,c:'#fff',sh:['rgba(0,0,0,0.5)',10,2]},276));
+  T(ctx,c.position,12,355,{f:BCF,s:9,ls:3,c:GRN+'0.85)'});
+  T(ctx,c.team,288,354.5,{f:OSW,s:9.3,ls:2,c:'rgba(255,255,255,0.38)',a:'right'});
+  let x=12;
+  c.stats.forEach(s=>{
+    const v={f:TEK,w:500,s:21.6,c:'#fff'}, l={f:BCF,s:7,ls:2.5,c:'rgba(0,200,150,0.58)'};
+    const w=Math.max(T(ctx,s.value,x,368,v),T(ctx,s.label,x,386,l));
+    x+=w+14;
+  });
+  rule(ctx,12,397.5,288,397.5,'rgba(255,255,255,0.05)');
+  T(ctx,'#'+c.serial,12,406,{f:BCF,s:7.7,ls:1,c:'rgba(255,255,255,0.18)',m:true});
+  T(ctx,c.league,288,406,{f:OSW,s:7.7,ls:1,c:GRN+'0.45)',a:'right',m:true});
+
+  ctx.globalCompositeOperation='screen';
+  ctx.fillStyle=lgr(ctx,112,0,0,CW,CH,[[0,'rgba(0,255,180,0)'],[0.22,'rgba(0,255,180,0.07)'],[0.42,'rgba(0,255,180,0)'],[0.56,'rgba(80,210,255,0.05)'],[0.72,'rgba(80,210,255,0)'],[0.86,'rgba(0,200,150,0.06)'],[1,'rgba(0,200,150,0)']]);
+  ctx.fillRect(0,0,CW,CH);
+  ctx.globalCompositeOperation='source-over';
+}
+
+function drawFrizim(ctx,c,scene){
+  const L=19, R=CW-19;
+  ctx.fillStyle=lgr(ctx,168,0,0,CW,CH,[[0,'#080410'],[0.3,'#0a0618'],[0.6,'#060310'],[1,'#040208']]);ctx.fillRect(0,0,CW,CH);
+  filt(ctx,'contrast(1.1) saturate(1.18)');
+  cover(ctx,scene,0,0,CW,CH);
+  drawSubject(ctx,0,22,CW,300);
+  filt(ctx,'none');
+  ellipseFill(ctx,CW/2,CH*0.18,212,487,[[0,'rgba(4,2,12,0)'],[0.22,'rgba(4,2,12,0)'],[1,'rgba(4,2,12,0.58)']]);
+  ctx.fillStyle=lgr(ctx,180,0,191,CW,229,[[0,'rgba(6,3,14,0)'],[0.52,'rgba(6,3,14,0.98)'],[1,'rgba(4,2,10,1)']]);ctx.fillRect(0,191,CW,229);
+
+  ctx.fillStyle=lgr(ctx,180,0,0,CW,CH,[[0,'rgba(140,70,255,0)'],[0.22,'rgba(140,70,255,0.55)'],[0.5,'rgba(255,180,50,0.38)'],[0.78,'rgba(70,190,255,0.55)'],[1,'rgba(70,190,255,0)']]);ctx.fillRect(11,0,2.5,CH);
+  ctx.fillStyle=lgr(ctx,180,0,0,CW,CH,[[0,'rgba(70,190,255,0)'],[0.22,'rgba(70,190,255,0.48)'],[0.5,'rgba(255,90,200,0.38)'],[0.78,'rgba(140,70,255,0.48)'],[1,'rgba(140,70,255,0)']]);ctx.fillRect(CW-13.5,0,2.5,CH);
+
+  T(ctx,c.league,L,14,{f:ANT,s:11.2,ls:1.5,c:'rgba(160,100,255,0.9)',sh:['rgba(140,70,255,0.45)',12]});
+  T(ctx,'2026 FRIZIM',L,28,{f:BCF,s:7.4,ls:2,c:'rgba(255,255,255,0.28)'});
+
+  const ed={f:OSW,s:8,ls:2,g:['#c87fff','#60c8ff'],m:true}, ew=tw(ctx,c.edition,ed)+16, ex=R-ew;
+  box(ctx,ex,13,ew,19,2,'rgba(8,4,16,0.55)');
+  box(ctx,ex,13,ew,19,2,lgr(ctx,135,ex,13,ew,19,[[0,'rgba(140,70,255,0.22)'],[1,'rgba(70,180,255,0.14)']]),'rgba(140,70,255,0.38)');
+  T(ctx,c.edition,ex+8,22.5,ed);
+
+  ctx.fillStyle=lgr(ctx,90,L,317,R-L,2,[[0,'rgba(140,70,255,0)'],[0.18,'rgba(140,70,255,0.7)'],[0.5,'rgba(255,200,50,0.5)'],[0.82,'rgba(70,190,255,0.7)'],[1,'rgba(70,190,255,0)']]);ctx.fillRect(L,317,R-L,2);
+  T(ctx,c.name,L,326,fitText(ctx,c.name,{f:ANT,s:22.7,ls:2,c:'#fff',sh:['rgba(140,70,255,0.4)',28]},R-L));
+  T(ctx,c.position,L,350,{f:OSW,s:9,ls:3,g:['rgba(175,95,255,0.9)','rgba(90,175,255,0.7)']});
+  T(ctx,c.team,R,350,{f:OSW,s:9.3,ls:2,c:'rgba(255,255,255,0.28)',a:'right'});
+  rule(ctx,L,363.5,R,363.5,'rgba(140,70,255,0.14)');
+  const cw=(R-L)/3;
+  c.stats.forEach((s,i)=>{
+    const x=L+cw*(i+0.5);
+    T(ctx,s.value,x,370,fitText(ctx,s.value,{f:TEK,w:500,s:20.5,c:'#fff',a:'center'},cw-6));
+    T(ctx,s.label,x,387,{f:BCF,s:7,ls:2,g:['rgba(175,95,255,0.58)','rgba(90,175,255,0.58)'],a:'center'});
+  });
+  rule(ctx,L,397.5,R,397.5,'rgba(255,255,255,0.04)');
+  const sp=c.serial.split('/');
+  T(ctx,'#'+sp[0],L,406,{f:BCF,s:7.7,ls:1,c:'rgba(255,255,255,0.14)',m:true});
+  T(ctx,sp[0]+'/'+(sp[1]||'199'),R,406,{f:OSW,s:8,ls:1,g:['rgba(255,175,55,0.7)','rgba(255,135,35,0.7)'],a:'right',m:true});
+
+  if(ctx.createConicGradient){
+    const g=ctx.createConicGradient((195-90)*Math.PI/180,CW*0.55,CH*0.32);
+    ['rgba(255,50,150,0.065)','rgba(255,130,30,0.055)','rgba(255,240,30,0.055)','rgba(30,240,120,0.055)','rgba(30,155,255,0.065)','rgba(155,30,255,0.065)','rgba(255,30,200,0.055)','rgba(255,50,150,0.045)']
+      .forEach((col,i,a)=>g.addColorStop(i/(a.length-1),col));
+    ctx.globalCompositeOperation='screen';ctx.fillStyle=g;ctx.fillRect(0,0,CW,CH);ctx.globalCompositeOperation='source-over';
+  }
+  rr(ctx,0.75,0.75,CW-1.5,CH-1.5,13.25);ctx.strokeStyle='rgba(140,70,255,0.2)';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+const DRAW={fopps:drawFopps,fowman:drawFowman,frizim:drawFrizim};
+
+// S = pixels per card unit. rounded=false leaves square corners for cutting.
+function render(ctx,S,rounded){
+  RS=S;
+  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+  ctx.setTransform(S,0,0,S,0,0);
+  ctx.save();
+  if(rounded){rr(ctx,0,0,CW,CH,14);ctx.clip();}
+  DRAW[selStyle](ctx,card,(ai.img&&ai.tok===card.tok)?ai.img:card.fallback);
+  ctx.restore();
+}
+function queueRender(){
+  if(rq||!card) return;
+  rq=requestAnimationFrame(()=>{rq=0;render(cardCv.getContext('2d'),cardCv.width/CW,true);});
+}
+
+/* ── PHOTO POSITIONING ── */
+function syncCtl(){
+  const t=document.getElementById('cutTgl');
+  t.disabled=!subj.cut; t.checked=subj.useCut;
+  document.getElementById('zoomIn').value=Math.round(view.z*100);
+}
+function setZoom(z){view.z=Math.min(3,Math.max(0.5,z));syncCtl();queueRender();}
+
+let drag=null;
+cardCv.addEventListener('pointerdown',e=>{
+  cardCv.setPointerCapture(e.pointerId);
+  drag={x:e.clientX,y:e.clientY,vx:view.x,vy:view.y};
+  cardCv.classList.add('drag');
+});
+cardCv.addEventListener('pointermove',e=>{
+  if(!drag) return;
+  const k=CW/cardCv.getBoundingClientRect().width;
+  view.x=drag.vx+(e.clientX-drag.x)*k; view.y=drag.vy+(e.clientY-drag.y)*k;
+  queueRender();
+});
+['pointerup','pointercancel'].forEach(t=>cardCv.addEventListener(t,()=>{drag=null;cardCv.classList.remove('drag');}));
+cardCv.addEventListener('wheel',e=>{e.preventDefault();setZoom(view.z*(e.deltaY<0?1.06:1/1.06));},{passive:false});
+document.getElementById('zoomIn').addEventListener('input',e=>setZoom(e.target.value/100));
+document.getElementById('cutTgl').addEventListener('change',e=>{subj.useCut=e.target.checked&&!!subj.cut;queueRender();});
+document.getElementById('btnFit').addEventListener('click',()=>{Object.assign(view,{x:0,y:0,z:1});syncCtl();queueRender();});
+document.getElementById('btnRetryScene').addEventListener('click',()=>{
+  if(!card) return;
+  loadAIScene(card.sport,card.scene,card.tok); sceneStatus(card.tok);
+});
+
+/* ── CARD DOWNLOAD ── */
+function exportCard(S,rounded,name){
+  if(!card){alert('Generate a card first!');return;}
+  try{
+    const out=mkCanvas(Math.round(CW*S),Math.round(CH*S));
+    render(out.getContext('2d'),S,rounded);
+    const link=document.createElement('a');
+    link.download=name+'-'+selStyle+'-'+Date.now()+'.png';
+    link.href=out.toDataURL('image/png');
+    link.click();
+  }catch(e){
+    console.error('Export error:',e);
+    alert('Export failed: '+e.message);
+  }
+}
+function downloadCard(){exportCard(3,true,'cardforge');}
+// 750 × 1050 px = 2.5" × 3.5" at 300 DPI
+function downloadPrintFile(){exportCard(2.5,false,'cardforge-print');}
 
 /* ── MAIN GENERATE FLOW ── */
 async function generate(){
   if(!imgData||busy)return; busy=true;
+  const tok=++genTok;
+  loadAIScene(selSport,selScene,tok);
   document.getElementById('btnGen').disabled=true;
   setUI('loading');
 
@@ -1019,8 +1228,10 @@ async function generate(){
     stepSet(1,'done'); stepSet(2,'active');
     setStatus('generating','Building card…');
 
-    // Canvas fallback shows immediately; AI scene loads in background and swaps in
+    // Canvas fallback shows immediately; the AI scene swaps in when it arrives
     const fallbackScene=generateSceneBg(selSport,selScene,cd.teamColor1,cd.teamColor2);
+    // Background removal may still be running; a late result re-renders the card
+    await Promise.race([Promise.all([subjReady,fontsReady]),sleep(30000)]);
 
     stepSet(2,'done'); stepSet(3,'active');
     await sleep(200);
@@ -1029,12 +1240,9 @@ async function generate(){
     stepSet(4,'done');
     await sleep(150);
 
-    populate(cd,jersey,edition,fallbackScene,imgData);
+    populate(cd,jersey,edition,fallbackScene,tok);
     setUI('result');
-    setStatus('generating','Loading AI scene…');
-
-    // AI scene loads asynchronously and swaps in when ready
-    loadAIScene(selSport,selScene);
+    sceneStatus(tok);
 
   }catch(e){
     console.error('Generation error:',e);
@@ -1044,9 +1252,9 @@ async function generate(){
       cd.stats=[{label:sk[0],value:cv1||mkStatVal(sk[0])},{label:sk[1],value:cv2||mkStatVal(sk[1])},{label:sk[2],value:cv3||mkStatVal(sk[2])}];
     }
     const fallbackScene=generateSceneBg(selSport,selScene,cd.teamColor1,cd.teamColor2);
-    populate(cd,jersey,edition,fallbackScene,imgData);
+    populate(cd,jersey,edition,fallbackScene,tok);
     setUI('result');
-    setStatus('ok','AI Ready');
+    sceneStatus(tok);
   }finally{
     busy=false;
     document.getElementById('btnGen').disabled=false;
@@ -1123,47 +1331,20 @@ function mkFallback(name,jersey,pos,team){
   };
 }
 
-function populate(d,jersey,edition,sceneUrl,selfieUrl){
-  const lg=LEAGUES[selSport]||selSport.toUpperCase();
-  const n=(d.name||'PLAYER').toUpperCase().slice(0,20);
-  const p=(d.position||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport]).toUpperCase();
-  const t=(d.team||'TEAM').toUpperCase().slice(0,16);
-  const c1=d.teamColor1||'#003087', c2=d.teamColor2||'#FFB612';
-  const num=d.cardSerial||'001/999';
-  const ed=edition||'ROOKIE CARD';
-
-  ['tScene','bScene','pScene'].forEach(id=>{document.getElementById(id).src=sceneUrl;});
-  ['tSelfie','bSelfie','pSelfie'].forEach(id=>{document.getElementById(id).src=selfieUrl;});
-
-  document.getElementById('tEd').textContent=ed;
-  document.getElementById('tName').textContent=n;
-  document.getElementById('tPos').textContent=p;
-  document.getElementById('tTeam').textContent=t;
-  document.getElementById('tTeam').style.color=c1;
-  document.getElementById('tLg').textContent=lg;
-  document.getElementById('tLg').style.color=c1;
-  document.getElementById('tNum').textContent='#'+num;
-  document.getElementById('tTopbar').style.background='linear-gradient(90deg,'+c1+' 55%,'+c2+' 100%)';
-  document.getElementById('tCbar').style.background='linear-gradient(90deg,'+c1+','+c2+')';
-  document.getElementById('tStats').innerHTML=(d.stats||[]).slice(0,3).map(s=>'<div class="t-stat"><span class="t-sv">'+s.value+'</span><span class="t-sk">'+s.label+'</span></div>').join('');
-
-  document.getElementById('bEd').textContent=ed;
-  document.getElementById('bName').textContent=n;
-  document.getElementById('bPos').textContent=p;
-  document.getElementById('bTeam').textContent=t;
-  document.getElementById('bNum').textContent='#'+num;
-  document.getElementById('bLg').textContent=lg;
-  document.getElementById('bStats').innerHTML=(d.stats||[]).slice(0,3).map(s=>'<div class="b-stat"><span class="b-sv">'+s.value+'</span><span class="b-sk">'+s.label+'</span></div>').join('');
-
-  document.getElementById('pEd').textContent=ed;
-  document.getElementById('pLg').textContent=lg;
-  document.getElementById('pName').textContent=n;
-  document.getElementById('pPos').textContent=p;
-  document.getElementById('pTeam').textContent=t;
-  document.getElementById('pNum').textContent='#'+num.split('/')[0];
-  document.getElementById('pSerial').textContent=num.split('/')[0]+'/'+(num.split('/')[1]||'199');
-  document.getElementById('pStats').innerHTML=(d.stats||[]).slice(0,3).map(s=>'<div class="p-stat"><span class="p-sv">'+s.value+'</span><span class="p-sk">'+s.label+'</span></div>').join('');
-
+function populate(d,jersey,edition,fallback,tok){
+  // Colors can come from the stats model; canvas gradients throw on anything invalid
+  const hex=(c,def)=>/^#[0-9a-f]{6}$/i.test(c||'')?c:def;
+  card={
+    tok, sport:selSport, scene:selScene, fallback,
+    name:(d.name||'PLAYER').toUpperCase().slice(0,20),
+    position:(d.position||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport]).toUpperCase(),
+    team:(d.team||'TEAM').toUpperCase().slice(0,16),
+    stats:(d.stats||[]).slice(0,3).map(s=>({label:String((s&&s.label)??''),value:String((s&&s.value)??'')})),
+    c1:hex(d.teamColor1,'#003087'), c2:hex(d.teamColor2,'#FFB612'),
+    serial:String(d.cardSerial||'001/999'),
+    edition:edition||'ROOKIE CARD',
+    league:LEAGUES[selSport]||selSport.toUpperCase()
+  };
   document.getElementById('scoutNote').textContent=d.scouting||'';
   showCard();
 }
@@ -1175,11 +1356,10 @@ function stepSet(n,state){
 }
 
 function showCard(){
-  ['cFopps','cFowman','cFrizim'].forEach(id=>document.getElementById(id).style.display='none');
-  const m={fopps:'cFopps',fowman:'cFowman',frizim:'cFrizim'};
-  const el=document.getElementById(m[selStyle]);
-  el.style.display='block';
-  el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
+  if(!card) return;
+  cardCv.className='card '+selStyle;
+  void cardCv.offsetWidth; cardCv.classList.add('in');
+  render(cardCv.getContext('2d'),cardCv.width/CW,true);
 }
 
 function setUI(s){
