@@ -570,7 +570,7 @@ function loadFile(f){
 
 /* ── GENERATE ── */
 document.getElementById('btnGen').addEventListener('click',generate);
-document.getElementById('btnRegen').addEventListener('click',generate);
+document.getElementById('btnRegen').addEventListener('click',newScene);
 document.getElementById('btnCycle').addEventListener('click',()=>{
   const s=['fopps','fowman','frizim']; const ni=(s.indexOf(selStyle)+1)%3; selStyle=s[ni];
   document.querySelectorAll('.stab').forEach(b=>b.classList.toggle('on',b.dataset.style===selStyle));
@@ -799,9 +799,9 @@ async function fetchAIStats(sport, pos, scene, name, team){
     const j=JSON.parse(text);
     if(!j.stats||!Array.isArray(j.stats)||j.stats.length<3) throw new Error('Bad stats format');
     return{
-      name:(j.name||name).toUpperCase().slice(0,20),
-      position:(j.position||pos).toUpperCase(),
-      team:(j.team||team).toUpperCase().slice(0,16),
+      name:name.toUpperCase().slice(0,20),
+      position:usePos.toUpperCase(),
+      team:team.toUpperCase().slice(0,16),
       stats:j.stats.slice(0,3),
       teamColor1:j.teamColor1||'#003087',
       teamColor2:j.teamColor2||'#FFB612',
@@ -1017,7 +1017,7 @@ function drawFopps(ctx,c,scene){
 
   box(ctx,10,303,280,3,1.5,lgr(ctx,90,10,303,280,3,[[0,c.c1],[1,c.c2]]));
   T(ctx,c.name,10,313,fitText(ctx,c.name,{f:OSW,w:700,s:23,ls:0.5,c:INK},280));
-  T(ctx,c.position,10,339,{f:BCF,w:600,s:9,ls:3,c:'#555'});
+  T(ctx,c.posLine,10,339,{f:BCF,w:600,s:9,ls:3,c:'#555'});
   T(ctx,c.team,290,338,{f:OSW,w:700,s:9.6,ls:1.5,c:c.c1,a:'right'});
   rule(ctx,10,352.5,290,352.5,'rgba(0,0,0,0.09)');
   const cw=280/3;
@@ -1058,7 +1058,7 @@ function drawFowman(ctx,c,scene){
 
   ctx.fillStyle=lgr(ctx,90,12,320,276,2,[[0,'rgba(0,200,150,0.8)'],[0.5,'rgba(0,200,150,0.15)'],[1,'rgba(0,200,150,0)']]);ctx.fillRect(12,320,276,2);
   T(ctx,c.name,12,329,fitText(ctx,c.name,{f:OSW,w:700,s:23,ls:1,c:'#fff',sh:['rgba(0,0,0,0.5)',10,2]},276));
-  T(ctx,c.position,12,355,{f:BCF,s:9,ls:3,c:GRN+'0.85)'});
+  T(ctx,c.posLine,12,355,{f:BCF,s:9,ls:3,c:GRN+'0.85)'});
   T(ctx,c.team,288,354.5,{f:OSW,s:9.3,ls:2,c:'rgba(255,255,255,0.38)',a:'right'});
   let x=12;
   c.stats.forEach(s=>{
@@ -1099,7 +1099,7 @@ function drawFrizim(ctx,c,scene){
 
   ctx.fillStyle=lgr(ctx,90,L,317,R-L,2,[[0,'rgba(140,70,255,0)'],[0.18,'rgba(140,70,255,0.7)'],[0.5,'rgba(255,200,50,0.5)'],[0.82,'rgba(70,190,255,0.7)'],[1,'rgba(70,190,255,0)']]);ctx.fillRect(L,317,R-L,2);
   T(ctx,c.name,L,326,fitText(ctx,c.name,{f:ANT,s:22.7,ls:2,c:'#fff',sh:['rgba(140,70,255,0.4)',28]},R-L));
-  T(ctx,c.position,L,350,{f:OSW,s:9,ls:3,g:['rgba(175,95,255,0.9)','rgba(90,175,255,0.7)']});
+  T(ctx,c.posLine,L,350,{f:OSW,s:9,ls:3,g:['rgba(175,95,255,0.9)','rgba(90,175,255,0.7)']});
   T(ctx,c.team,R,350,{f:OSW,s:9.3,ls:2,c:'rgba(255,255,255,0.28)',a:'right'});
   rule(ctx,L,363.5,R,363.5,'rgba(140,70,255,0.14)');
   const cw=(R-L)/3;
@@ -1188,6 +1188,17 @@ function downloadCard(){exportCard(3,true,'cardforge');}
 // 750 × 1050 px = 2.5" × 3.5" at 300 DPI
 function downloadPrintFile(){exportCard(2.5,false,'cardforge-print');}
 
+// New background only: the player, stats and photo placement stay as they are
+function newScene(){
+  if(!card||busy) return;
+  const tok=++genTok;
+  card.tok=tok;
+  card.fallback=generateSceneBg(card.sport,card.scene,card.c1,card.c2);
+  loadAIScene(card.sport,card.scene,tok);
+  sceneStatus(tok);
+  queueRender();
+}
+
 /* ── MAIN GENERATE FLOW ── */
 async function generate(){
   if(!imgData||busy)return; busy=true;
@@ -1197,7 +1208,7 @@ async function generate(){
   setUI('loading');
 
   const name=document.getElementById('iName').value.trim()||'Star Player';
-  const jersey=document.getElementById('iJersey').value.trim()||'00';
+  const jersey=document.getElementById('iJersey').value.trim();
   const pos=document.getElementById('iPos').value.trim()||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport];
   const team=document.getElementById('iTeam').value.trim()||'Home Team';
   const edition=document.getElementById('iEd').value;
@@ -1339,12 +1350,14 @@ function populate(d,jersey,edition,fallback,tok){
     name:(d.name||'PLAYER').toUpperCase().slice(0,20),
     position:(d.position||(SCENE_POS[selSport]&&SCENE_POS[selSport][selScene])||DEFPOS[selSport]).toUpperCase(),
     team:(d.team||'TEAM').toUpperCase().slice(0,16),
+    jersey,
     stats:(d.stats||[]).slice(0,3).map(s=>({label:String((s&&s.label)??''),value:String((s&&s.value)??'')})),
     c1:hex(d.teamColor1,'#003087'), c2:hex(d.teamColor2,'#FFB612'),
     serial:String(d.cardSerial||'001/999'),
     edition:edition||'ROOKIE CARD',
     league:LEAGUES[selSport]||selSport.toUpperCase()
   };
+  card.posLine=card.position+(jersey?' · #'+jersey.toUpperCase():'');
   document.getElementById('scoutNote').textContent=d.scouting||'';
   showCard();
 }
